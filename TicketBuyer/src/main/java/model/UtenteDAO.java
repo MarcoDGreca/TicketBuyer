@@ -17,7 +17,7 @@ public class UtenteDAO {
     }
 
     public Utente getUserByEmail(String email) {
-        String query = "SELECT * FROM UserAccount WHERE email = ?";
+        String query = "SELECT * FROM Utente WHERE email = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
@@ -42,7 +42,7 @@ public class UtenteDAO {
     }
 
     public void addUser(Utente utente) {
-        String query = "INSERT INTO UserAccount (email, passwordUser, nome, cognome, indirizzo, telefono, numero, ruolo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Utente (email, passwordUser, nome, cognome, indirizzo, telefono, numero, ruolo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, utente.getEmail());
@@ -60,7 +60,7 @@ public class UtenteDAO {
     }
 
     public void updateUser(Utente utente) {
-        String query = "UPDATE UserAccount SET passwordUser = ?, nome = ?, cognome = ?, indirizzo = ?, telefono = ?, numero = ?, ruolo = ? WHERE email = ?";
+        String query = "UPDATE Utente SET passwordUser = ?, nome = ?, cognome = ?, indirizzo = ?, telefono = ?, numero = ?, ruolo = ? WHERE email = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, utente.getPasswordUser());
@@ -78,7 +78,7 @@ public class UtenteDAO {
     }
 
     public void deleteUser(String email) {
-        String query = "DELETE FROM UserAccount WHERE email = ?";
+        String query = "DELETE FROM Utente WHERE email = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
@@ -90,7 +90,7 @@ public class UtenteDAO {
 
     public List<Utente> getAllUsers() {
         List<Utente> users = new ArrayList<>();
-        String query = "SELECT * FROM UserAccount";
+        String query = "SELECT * FROM Utente";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
