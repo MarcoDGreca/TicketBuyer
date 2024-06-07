@@ -8,8 +8,8 @@ import java.util.List;
 public class TicketDAO {
     private DataSource dataSource;
 
-    public TicketDAO(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public TicketDAO() {
+        this.dataSource = DataSource.getInstance();
     }
 
     public Ticket getTicketById(int ticketId) {

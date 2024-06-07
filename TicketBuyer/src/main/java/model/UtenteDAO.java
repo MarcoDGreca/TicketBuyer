@@ -12,8 +12,8 @@ import java.util.List;
 public class UtenteDAO {
     private DataSource dataSource;
 
-    public UtenteDAO(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public UtenteDAO() {
+        this.dataSource = DataSource.getInstance();
     }
 
     public Utente getUserByEmail(String email) {

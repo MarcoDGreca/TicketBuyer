@@ -12,8 +12,8 @@ import java.util.List;
 public class ReviewDAO {
     private DataSource dataSource;
 
-    public ReviewDAO(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public ReviewDAO() {
+        this.dataSource = DataSource.getInstance();;
     }
 
     public Review getReviewById(int reviewId) {

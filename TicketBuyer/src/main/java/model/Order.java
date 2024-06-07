@@ -1,25 +1,22 @@
 package model;
 
-import java.util.Date;
-import java.util.List;
+import java.sql.Date;
 
 public class Order {
     private int codiceOrdine;
     private String emailCliente;
     private double prezzoTotale;
     private Date dataAcquisto;
-    private Stato state;
-    private List<OrderDetail> dettagliOrdine;
+    private Stato stato;
 
     public Order() {}
 
-    public Order(int codiceOrdine, String emailCliente, double prezzoTotale, Date dataAcquisto, List<OrderDetail> dettagliOrdine, Stato state) {
+    public Order(int codiceOrdine, String emailCliente, double prezzoTotale, Date dataAcquisto, Stato stato) {
         this.codiceOrdine = codiceOrdine;
         this.emailCliente = emailCliente;
         this.prezzoTotale = prezzoTotale;
         this.dataAcquisto = dataAcquisto;
-        this.dettagliOrdine = dettagliOrdine;
-        this.state = state;
+        this.stato = stato;
     }
 
     public int getCodiceOrdine() {
@@ -53,21 +50,12 @@ public class Order {
     public void setDataAcquisto(Date dataAcquisto) {
         this.dataAcquisto = dataAcquisto;
     }
-    
-    public Stato getState() {
-        return state;
+
+    public Stato getStato() {
+        return stato;
     }
 
-    public void setState(Stato state) {
-        this.state = state;
-    }
-
-
-    public List<OrderDetail> getDettagliOrdine() {
-        return dettagliOrdine;
-    }
-
-    public void setDettagliOrdine(List<OrderDetail> dettagliOrdine) {
-        this.dettagliOrdine = dettagliOrdine;
+    public void setStato(Stato stato) {
+        this.stato = stato;
     }
 }

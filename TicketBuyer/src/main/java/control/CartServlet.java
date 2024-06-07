@@ -15,15 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
-@WebServlet("/shoppingCart")
+@WebServlet("/CartServlet")
 public class CartServlet extends HttpServlet {
 
     private TicketDAO ticketDAO;
 
     @Override
     public void init() throws ServletException {
-        DataSource dataSource = new DataSource("jdbc:mysql://localhost:3306/GeekFactoryDB", "root", "password");
-        ticketDAO = new TicketDAO(dataSource);
+        ticketDAO = new TicketDAO();
     }
 
     @Override
