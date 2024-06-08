@@ -17,7 +17,7 @@ public class OrderDAO {
         this.dataSource = DataSource.getInstance();;
     }
 
-    public void addOrder(Order order) {
+    public synchronized void addOrder(Order order) {
         String query = "INSERT INTO Ordine (emailCliente, prezzoTotale, dataAcquisto, stato) VALUES (?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -31,7 +31,7 @@ public class OrderDAO {
         }
     }
 
-    public Order getOrderById(int orderId) {
+    public synchronized Order getOrderById(int orderId) {
         String query = "SELECT * FROM Ordine WHERE codiceOrdine = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -53,7 +53,7 @@ public class OrderDAO {
         return null;
     }
 
-    public List<Order> getAllOrders() {
+    public synchronized List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         String query = "SELECT * FROM Ordine";
         try (Connection connection = dataSource.getConnection();
@@ -75,7 +75,7 @@ public class OrderDAO {
         return orders;
     }
 
-    public void updateOrder(Order order) {
+    public synchronized void updateOrder(Order order) {
         String query = "UPDATE Ordine SET emailCliente = ?, prezzoTotale = ?, dataAcquisto = ?, stato = ? WHERE codiceOrdine = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -90,7 +90,7 @@ public class OrderDAO {
         }
     }
 
-    public void deleteOrder(int orderId) {
+    public synchronized void deleteOrder(int orderId) {
         String query = "DELETE FROM Ordine WHERE codiceOrdine = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -101,7 +101,7 @@ public class OrderDAO {
         }
     }
     
-    public List<Order> getOrdersByEmail(String emailCliente) {
+    public synchronized List<Order> getOrdersByEmail(String emailCliente) {
         List<Order> orders = new ArrayList<>();
         String query = "SELECT * FROM Ordine WHERE emailCliente = ?";
 

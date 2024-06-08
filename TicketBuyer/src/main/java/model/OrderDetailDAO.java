@@ -16,7 +16,7 @@ public class OrderDetailDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public void addOrderDetail(OrderDetail orderDetail) {
+    public synchronized void addOrderDetail(OrderDetail orderDetail) {
         String query = "INSERT INTO DettaglioOrdine (codiceOrdine, codiceBiglietto, quantita) VALUES (?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -29,7 +29,7 @@ public class OrderDetailDAO {
         }
     }
 
-    public List<OrderDetail> getOrderDetailsByOrderId(int ordineId) {
+    public synchronized List<OrderDetail> getOrderDetailsByOrderId(int ordineId) {
         List<OrderDetail> orderDetails = new ArrayList<>();
         String query = "SELECT * FROM DettaglioOrdine WHERE codiceOrdine = ?";
         try (Connection connection = dataSource.getConnection();
@@ -51,7 +51,7 @@ public class OrderDetailDAO {
         return orderDetails;
     }
 
-    public void updateOrderDetail(OrderDetail orderDetail) {
+    public synchronized void updateOrderDetail(OrderDetail orderDetail) {
         String query = "UPDATE DettaglioOrdine SET quantita = ? WHERE codiceOrdine = ? AND codiceBiglietto = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -64,7 +64,7 @@ public class OrderDetailDAO {
         }
     }
 
-    public void deleteOrderDetail(int ordineId, int bigliettoId) {
+    public synchronized void deleteOrderDetail(int ordineId, int bigliettoId) {
         String query = "DELETE FROM DettaglioOrdine WHERE codiceOrdine = ? AND codiceBiglietto = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {

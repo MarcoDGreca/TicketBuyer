@@ -12,7 +12,7 @@ public class TicketDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public Ticket getTicketById(int ticketId) {
+    public synchronized Ticket getTicketById(int ticketId) {
         String query = "SELECT * FROM Biglietto WHERE codiceBiglietto = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -34,7 +34,7 @@ public class TicketDAO {
         return null;
     }
 
-    public List<Ticket> getAllTickets() {
+    public synchronized List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
         String query = "SELECT * FROM Biglietto";
         try (Connection connection = dataSource.getConnection();
@@ -56,7 +56,7 @@ public class TicketDAO {
         return tickets;
     }
 
-    public void addTicket(Ticket ticket) {
+    public synchronized void addTicket(Ticket ticket) {
         String query = "INSERT INTO Biglietto (codiceEvento, tipo, descrizione, prezzoUnitario) VALUES (?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -70,7 +70,7 @@ public class TicketDAO {
         }
     }
 
-    public void updateTicket(Ticket ticket) {
+    public synchronized void updateTicket(Ticket ticket) {
         String query = "UPDATE Biglietto SET codiceEvento = ?, tipo = ?, descrizione = ?, prezzoUnitario = ? WHERE codiceBiglietto = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -85,7 +85,7 @@ public class TicketDAO {
         }
     }
 
-    public void deleteTicket(int ticketId) {
+    public synchronized void deleteTicket(int ticketId) {
         String query = "UPDATE Biglietto SET deleted = true WHERE codiceBiglietto = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {

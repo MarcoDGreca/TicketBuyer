@@ -16,7 +16,7 @@ public class ReviewDAO {
         this.dataSource = DataSource.getInstance();;
     }
 
-    public Review getReviewById(int reviewId) {
+    public synchronized Review getReviewById(int reviewId) {
         String query = "SELECT * FROM Recensione WHERE codiceRecensione = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -39,7 +39,7 @@ public class ReviewDAO {
         return null;
     }
 
-    public void addReview(Review review) {
+    public synchronized void addReview(Review review) {
         String query = "INSERT INTO Recensione (codiceEvento, emailCliente, votazione, testo, dataRecensione) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -54,7 +54,7 @@ public class ReviewDAO {
         }
     }
 
-    public void updateReview(Review review) {
+    public synchronized void updateReview(Review review) {
         String query = "UPDATE Recensione SET codiceEvento = ?, emailCliente = ?, votazione = ?, testo = ?, dataRecensione = ? WHERE codiceRecensione = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -70,7 +70,7 @@ public class ReviewDAO {
         }
     }
 
-    public void deleteReview(int reviewId) {
+    public synchronized void deleteReview(int reviewId) {
         String query = "DELETE FROM Recensione WHERE codiceRecensione = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -81,7 +81,7 @@ public class ReviewDAO {
         }
     }
 
-    public List<Review> getAllReviews() {
+    public synchronized List<Review> getAllReviews() {
         List<Review> reviews = new ArrayList<>();
         String query = "SELECT * FROM Recensione";
         try (Connection connection = dataSource.getConnection();

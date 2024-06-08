@@ -16,7 +16,7 @@ public class UtenteDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public Utente getUserByEmail(String email) {
+    public synchronized Utente getUserByEmail(String email) {
         String query = "SELECT * FROM Utente WHERE email = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -41,7 +41,7 @@ public class UtenteDAO {
         return null;
     }
 
-    public void addUser(Utente utente) {
+    public synchronized void addUser(Utente utente) {
         String query = "INSERT INTO Utente (email, passwordUser, nome, cognome, indirizzo, telefono, numero, ruolo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -59,7 +59,7 @@ public class UtenteDAO {
         }
     }
 
-    public void updateUser(Utente utente) {
+    public synchronized void updateUser(Utente utente) {
         String query = "UPDATE Utente SET passwordUser = ?, nome = ?, cognome = ?, indirizzo = ?, telefono = ?, numero = ?, ruolo = ? WHERE email = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -77,7 +77,7 @@ public class UtenteDAO {
         }
     }
 
-    public void deleteUser(String email) {
+    public synchronized void deleteUser(String email) {
         String query = "DELETE FROM Utente WHERE email = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -88,7 +88,7 @@ public class UtenteDAO {
         }
     }
 
-    public List<Utente> getAllUsers() {
+    public synchronized List<Utente> getAllUsers() {
         List<Utente> users = new ArrayList<>();
         String query = "SELECT * FROM Utente";
         try (Connection connection = dataSource.getConnection();
@@ -113,7 +113,7 @@ public class UtenteDAO {
         return users;
     }
     
-    public Utente authenticate(String email, String password) {
+    public synchronized Utente authenticate(String email, String password) {
         String query = "SELECT * FROM Utente WHERE email = ? AND passwordUser = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {

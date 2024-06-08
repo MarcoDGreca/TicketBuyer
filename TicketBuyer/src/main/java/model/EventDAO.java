@@ -13,7 +13,7 @@ public class EventDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public void addEvent(Event event) {
+    public synchronized void addEvent(Event event) {
         String query = "INSERT INTO Evento (nome, luogo, dataEvento, orario, disponibilita) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -28,7 +28,7 @@ public class EventDAO {
         }
     }
 
-    public Event getEventById(int eventId) {
+    public synchronized Event getEventById(int eventId) {
         String query = "SELECT * FROM Evento WHERE codiceEvento = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -51,7 +51,7 @@ public class EventDAO {
         return null;
     }
 
-    public List<Event> getAllEvents() {
+    public synchronized List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
         String query = "SELECT * FROM Evento";
         try (Connection connection = dataSource.getConnection();
@@ -74,7 +74,7 @@ public class EventDAO {
         return events;
     }
 
-    public void updateEvent(Event event) {
+    public synchronized void updateEvent(Event event) {
         String query = "UPDATE Evento SET nome = ?, luogo = ?, dataEvento = ?, orario = ?, disponibilita = ? WHERE codiceEvento = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -90,7 +90,7 @@ public class EventDAO {
         }
     }
 
-    public void deleteEvent(int eventId) {
+    public synchronized void deleteEvent(int eventId) {
         String query = "DELETE FROM Evento WHERE codiceEvento = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
