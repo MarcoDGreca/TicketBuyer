@@ -1,37 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - TicketBuyer</title>
-    <link href="${pageContext.request.contextPath}/styles/home.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-            </ul>
-        </nav>
-        <h1>TicketBuyer</h1>
-    </header>
-
-<div class="principal">
-        <section class="intro">
-            <h2>Benvenuto su TicketBuyer</h2>
-            <p>Il posto migliore per trovare e acquistare i biglietti per i tuoi eventi preferiti!</p>
-            <a href="events">Scopri gli eventi</a>
-        </section>
-        <section class="about">
-            <h2>Chi siamo</h2>
-            <p>TicketBuyer è il tuo punto di riferimento per l'acquisto di biglietti per eventi di ogni tipo: concerti, spettacoli teatrali, eventi sportivi e molto altro.</p>
-            <p>Sfoglia il nostro catalogo per scoprire gli eventi in programma e prenota i tuoi biglietti oggi stesso!</p>
-        </section>
-</div>
-
-    <footer>
-        <p>&copy; 2024 Ticket Buyer. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+<jsp:include page="header.jsp" />
+<main>
+    <section class="hero">
+        <img src="images/event1.jpg" alt="Event 1">
+        <div class="hero-text">
+            <h1>Benvenuti a TicketBuyer</h1>
+            <p>Il posto migliore per acquistare i tuoi biglietti per eventi straordinari!</p>
+        </div>
+    </section>
+    <section class="highlights">
+        <div class="highlight">
+            <img src="images/event2.jpg" alt="Event 2">
+            <h2>Eventi Sportivi</h2>
+            <p>Scopri gli ultimi eventi sportivi e acquista i biglietti in pochi click!</p>
+        </div>
+        <div class="highlight">
+            <img src="images/event3.jpg" alt="Event 3">
+            <h2>Concerti</h2>
+            <p>Non perdere i concerti dei tuoi artisti preferiti. Trova i biglietti qui!</p>
+        </div>
+        <div class="highlight">
+            <img src="images/event4.jpg" alt="Event 4">
+            <h2>Fiere</h2>
+            <p>Partecipa alle fiere più interessanti e innovativi del momento.</p>
+        </div>
+    </section>
+</main>
+<jsp:include page="footer.jsp" />

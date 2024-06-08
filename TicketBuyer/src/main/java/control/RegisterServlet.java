@@ -1,41 +1,41 @@
 package control;
 
-import java.io.IOException;
+import model.Ruolo;
+import model.Utente;
+import model.UtenteDAO;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-/**
- * Servlet implementation class RegisterServlet
- */
-@WebServlet("/RegisterServlet")
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public RegisterServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+
+    private static final long serialVersionUID = 1L;
+    private UtenteDAO userDAO;
+
+    @Override
+    public void init() throws ServletException {
+        userDAO = new UtenteDAO();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String nome = request.getParameter("name");
+        String cognome = request.getParameter("surname");
+        String indirizzo = request.getParameter("address");
+        String telefono = request.getParameter("phone");
+        String numero = request.getParameter("cell");
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+        Utente newUser = new Utente( email, password, nome, cognome, indirizzo, telefono, numero, Ruolo.UTENTE);
 
+        userDAO.addUser(newUser);
+
+        response.sendRedirect("login");
+    }
 }
+

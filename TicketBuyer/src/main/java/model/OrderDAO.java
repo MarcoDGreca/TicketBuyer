@@ -100,5 +100,30 @@ public class OrderDAO {
             e.printStackTrace();
         }
     }
+    
+    public List<Order> getOrdersByEmail(String emailCliente) {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM Ordine WHERE emailCliente = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, emailCliente);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Order order = new Order();
+                    order.setCodiceOrdine(resultSet.getInt("codiceOrdine"));
+                    order.setEmailCliente(resultSet.getString("emailCliente"));
+                    order.setPrezzoTotale(resultSet.getDouble("prezzoTotale"));
+                    order.setDataAcquisto(resultSet.getDate("dataAcquisto"));
+                    order.setStato(Stato.valueOf(resultSet.getString("stato")));
+                    orders.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
 }
 

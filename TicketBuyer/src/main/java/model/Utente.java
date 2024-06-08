@@ -8,11 +8,11 @@ public class Utente {
 	private String tel;
 	private String indirizzo;
 	private String numero;
-	private String ruolo;
+	private Ruolo ruolo;
 
 public Utente() {}
 
-public Utente(String email, String passwordUser, String nome, String cognome, String indirizzo, String telefono, String numero, String ruolo) {
+public Utente(String email, String passwordUser, String nome, String cognome, String indirizzo, String telefono, String numero, Ruolo ruolo) {
     this.email = email;
     this.passwordUser = passwordUser;
     this.nome = nome;
@@ -79,11 +79,11 @@ public void setNumero(String numero) {
     this.numero = numero;
 }
 
-public String getRuolo() {
+public Ruolo getRuolo() {
     return ruolo;
 }
 
-public void setRuolo(String ruolo) {
+public void setRuolo(Ruolo ruolo) {
     this.ruolo = ruolo;
 }
 
