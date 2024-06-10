@@ -8,16 +8,18 @@ public class Event {
     private String luogo;
     private Date dataEvento;
     private String orario;
+    private TipoEvento tipo;
     private int disponibilita;
 
     public Event() {}
 
-    public Event(int codiceEvento, String nome, String luogo, Date dataEvento, String orario, int disponibilita) {
+    public Event(int codiceEvento, String nome, String luogo, Date dataEvento, String orario,TipoEvento tipo, int disponibilita) {
         this.codiceEvento = codiceEvento;
         this.nome = nome;
         this.luogo = luogo;
         this.dataEvento = dataEvento;
         this.orario = orario;
+        this.tipo = tipo;
         this.disponibilita = disponibilita;
     }
 
@@ -56,10 +58,18 @@ public class Event {
     public String getOrario() {
         return orario;
     }
-
-    public void setPrezzo(String orario) {
-        this.orario = orario;
+    
+    public void setOrario(String orario) {
+		this.orario = orario;	
+	}
+    
+    public String getTipo() {
+        return tipo.getTipo();
     }
+    
+    public void setTipo(TipoEvento tipo) {
+		this.tipo = tipo;	
+	}
 
     public int getDisponibilita() {
         return disponibilita;
@@ -68,4 +78,5 @@ public class Event {
     public void setDisponibilita(int disponibilita) {
         this.disponibilita = disponibilita;
     }
+
 }

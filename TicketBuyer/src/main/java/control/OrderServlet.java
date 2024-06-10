@@ -1,41 +1,46 @@
 package control;
 
-import java.io.IOException;
+import model.Order;
+import model.OrderDAO;
+import model.Utente;
+import util.DataSource;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
 
-/**
- * Servlet implementation class OrderServlet
- */
-@WebServlet("/OrderServlet")
+@WebServlet("/orders")
 public class OrderServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public OrderServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+    private static final long serialVersionUID = 1L;
+    private OrderDAO orderDAO;
+
+    @Override
+    public void init() throws ServletException {
+        orderDAO = new OrderDAO();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Utente user = (Utente) session.getAttribute("user");
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
+        }
 
+        List<Order> orders = orderDAO.getOrdersByEmail(user.getEmail());
+        request.setAttribute("orders", orders);
+        request.getRequestDispatcher("/WEB-INF/view/orders.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
 }

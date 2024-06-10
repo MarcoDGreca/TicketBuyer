@@ -1,7 +1,11 @@
 package model;
 
 import util.DataSource;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,7 @@ public class TicketDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public synchronized Ticket getTicketById(int ticketId) {
+    public Ticket getTicketById(int ticketId) {
         String query = "SELECT * FROM Biglietto WHERE codiceBiglietto = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -24,7 +28,7 @@ public class TicketDAO {
                         resultSet.getInt("codiceEvento"),
                         resultSet.getString("tipo"),
                         resultSet.getString("descrizione"),
-                        resultSet.getDouble("prezzoUnitario")
+                        resultSet.getDouble("prezzo")
                     );
                 }
             }
@@ -33,8 +37,8 @@ public class TicketDAO {
         }
         return null;
     }
-
-    public synchronized List<Ticket> getAllTickets() {
+    
+    public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
         String query = "SELECT * FROM Biglietto";
         try (Connection connection = dataSource.getConnection();
@@ -42,12 +46,12 @@ public class TicketDAO {
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Ticket ticket = new Ticket(
-                    resultSet.getInt("codiceBiglietto"),
-                    resultSet.getInt("codiceEvento"),
-                    resultSet.getString("tipo"),
-                    resultSet.getString("descrizione"),
-                    resultSet.getDouble("prezzoUnitario")
-                );
+                        resultSet.getInt("codiceBiglietto"),
+                        resultSet.getInt("codiceEvento"),
+                        resultSet.getString("tipo"),
+                        resultSet.getString("descrizione"),
+                        resultSet.getDouble("prezzo")
+                    );
                 tickets.add(ticket);
             }
         } catch (SQLException e) {
@@ -56,43 +60,4 @@ public class TicketDAO {
         return tickets;
     }
 
-    public synchronized void addTicket(Ticket ticket) {
-        String query = "INSERT INTO Biglietto (codiceEvento, tipo, descrizione, prezzoUnitario) VALUES (?, ?, ?, ?)";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, ticket.getCodiceEvento());
-            statement.setString(2, ticket.getTipo());
-            statement.setString(3, ticket.getDescrizione());
-            statement.setDouble(4, ticket.getPrezzoUnitario());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public synchronized void updateTicket(Ticket ticket) {
-        String query = "UPDATE Biglietto SET codiceEvento = ?, tipo = ?, descrizione = ?, prezzoUnitario = ? WHERE codiceBiglietto = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, ticket.getCodiceEvento());
-            statement.setString(2, ticket.getTipo());
-            statement.setString(3, ticket.getDescrizione());
-            statement.setDouble(4, ticket.getPrezzoUnitario());
-            statement.setInt(5, ticket.getCodiceBiglietto());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public synchronized void deleteTicket(int ticketId) {
-        String query = "UPDATE Biglietto SET deleted = true WHERE codiceBiglietto = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, ticketId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
