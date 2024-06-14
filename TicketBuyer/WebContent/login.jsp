@@ -1,35 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <% String errorMessage = request.getAttribute("errorMessage").toString(); %>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/login.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="images/logo.png" alt="Logo">
-        </div>
-        <div class="auth-links">
-            <% if (session.getAttribute("user") != null) { %>
-                <a href="logout">Logout</a>
-            <% } else { %>
-                <a href="login">Login</a>
-                <a href="register">Register</a>
-            <% } %>
-        </div>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="home">Home</a></li>
-            <li><a href="events">Events</a></li>
-            <% if (session.getAttribute("user") != null) { %>
-                <li><a href="orders">My Orders</a></li>
-            <% } %>
-            <li><a href="cart">Cart</a></li>
-        </ul>
-    </nav>
+    <jsp:include page="header.jsp" />
     <main>
         <h2>Login</h2>
         <form action="login" method="post">
@@ -45,15 +28,16 @@
                 <button type="submit">Login</button>
             </div>
             <div>
-                <% if (errorMessage != null && !errorMessage.isEmpty()) { %>
-                    <p style="color:red;"><%= errorMessage %></p>
-                <% } %>
+                <%
+                    String errorMessage = (String) request.getAttribute("errorMessage");
+                    if (errorMessage != null && !errorMessage.isEmpty()) {
+                        out.print("<p style='color:red;'>" + errorMessage + "</p>");
+                    }
+                %>
             </div>
         </form>
     </main>
-    <footer>
-        <p>&copy; 2024 TicketBuyer</p>
-    </footer>
+    <jsp:include page="footer.jsp" />
 </body>
 </html>
 

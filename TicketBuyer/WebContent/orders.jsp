@@ -2,54 +2,56 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Order" %>
 <%@ page import="model.OrderDAO" %>
-<jsp:include page="header.jsp" />
 
-<main>
-    <h2>I tuoi ordini</h2>
-    <%
-        String emailCliente = (String) session.getAttribute("user");
-        if (emailCliente != null) {
-            OrderDAO orderDAO = new OrderDAO();
-            List<Order> orders = orderDAO.getOrdersByEmail(emailCliente);
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    
+<%@ page import="model.Order" %>
+<%@ page import="model.Utente" %>
+<%@ page import="java.util.List" %>
+<%
+    Utente user = (Utente) session.getAttribute("user");
+    if (user == null) {
+        response.sendRedirect("login");
+        return;
+    }
 
+    OrderDAO orderDAO = new OrderDAO();
+    List<Order> orders = orderDAO.getOrdersByEmail(user.getEmail());
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>I tuoi ordini</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/orders.css">
+</head>
+<body>
+    <jsp:include page="header.jsp" />
+    <main>
+        <h1>I tuoi ordini</h1>
+        <%
             if (orders != null && !orders.isEmpty()) {
-    %>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Codice Ordine</th>
-                            <th>Data Ordine</th>
-                            <th>Totale</th>
-                            <th>Stato</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%
-                            for (Order order : orders) {
-                        %>
-                            <tr>
-                                <td><%= order.getCodiceOrdine() %></td>
-                                <td><%= order.getDataAcquisto() %></td>
-                                <td><%= order.getPrezzoTotale() %></td>
-                                <td><%= order.getStato() %></td>
-                            </tr>
-                        <%
-                            }
-                        %>
-                    </tbody>
-                </table>
-    <%
+        %>
+            <ul>
+                <% for (Order order : orders) { %>
+                    <li>
+                        <p>Ordine: <%= order.getCodiceOrdine() %></p>
+                        <p>Data: <%= order.getDataAcquisto() %></p>
+                        <p>Prezzo totale: <%= order.getPrezzoTotale() %></p>
+                    </li>
+                <% } %>
+            </ul>
+        <%
             } else {
-    %>
-                <p>Non hai ordini.</p>
-    <%
+                out.println("<p>Non hai effettuato ordini.</p>");
             }
-        } else {
-    %>
-            <p>Devi essere loggato per vedere i tuoi ordini.</p>
-    <%
-        }
-    %>
-</main>
+        %>
+    </main>
+    <jsp:include page="footer.jsp" />
+</body>
+</html>
 
-<jsp:include page="footer.jsp" />

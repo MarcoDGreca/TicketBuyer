@@ -3,7 +3,7 @@ package model;
 public enum Stato {
     IN_LAVORAZIONE("In lavorazione"),
     COMPLETATO("Completato"),
-	RIMBORSO("In Rimborso");
+	RIMBORSO("Richiesto Rimborso");
 
     private final String stato;
 

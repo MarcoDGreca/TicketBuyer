@@ -1,35 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <% String errorMessage = request.getAttribute("errorMessage").toString(); %>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/register.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="images/logo.png" alt="Logo">
-        </div>
-        <div class="auth-links">
-            <% if (session.getAttribute("user") != null) { %>
-                <a href="logout">Logout</a>
-            <% } else { %>
-                <a href="login">Login</a>
-                <a href="register">Register</a>
-            <% } %>
-        </div>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="home">Home</a></li>
-            <li><a href="events">Events</a></li>
-            <% if (session.getAttribute("user") != null) { %>
-                <li><a href="orders">My Orders</a></li>
-            <% } %>
-            <li><a href="cart">Cart</a></li>
-        </ul>
-    </nav>
+    <jsp:include page="header.jsp" />
     <main>
         <h2>Register</h2>
         <form action="register" method="post">
@@ -42,46 +25,39 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <div>
-                <label for="name">Name:</label>
+                <label for="name">Nome:</label>
                 <input type="text" id="name" name="name" required>
             </div>
             <div>
-                <label for="surname">Surname:</label>
+                <label for="surname">Cognome:</label>
                 <input type="text" id="surname" name="surname" required>
             </div>
             <div>
-                <label for="address">Address:</label>
+                <label for="address">Indirizzo:</label>
                 <input type="text" id="address" name="address" required>
             </div>
             <div>
-                <label for="phone">Phone:</label>
+                <label for="phone">Telefono:</label>
                 <input type="text" id="phone" name="phone" required>
             </div>
             <div>
-                <label for="cardNumber">Card Number:</label>
-                <input type="text" id="cardNumber" name="cardNumber" required>
+                <label for="cardNumber">Numero:</label>
+                <input type="text" id="number" name="number" required>
             </div>
+                <button type="submit">Registrati</button>
+                <button type="reset">Cancella</button>
             <div>
-                <label for="cardHolder">Card Holder:</label>
-                <input type="text" id="cardHolder" name="cardHolder" required>
-            </div>
-            <div>
-                <label for="cvv">CVV:</label>
-                <input type="text" id="cvv" name="cvv" required>
-            </div>
-            <div>
-                <button type="submit">Register</button>
-            </div>
-            <div>
-                <% if (errorMessage != null && !errorMessage.isEmpty()) { %>
-                    <p style="color:red;"><%= errorMessage %></p>
-                <% } %>
+                <%
+                    String errorMessage = (String) request.getAttribute("errorMessage");
+                    if (errorMessage != null && !errorMessage.isEmpty()) {
+                        out.print("<p style='color:red;'>" + errorMessage + "</p>");
+                    }
+                %>
             </div>
         </form>
     </main>
-    <footer>
-        <p>&copy; 2024 TicketBuyer</p>
-    </footer>
+    <jsp:include page="footer.jsp" />
 </body>
 </html>
+
 
