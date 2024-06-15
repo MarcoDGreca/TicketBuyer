@@ -34,7 +34,6 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        // Hash the entered password
         String hashedPassword = hashPassword(password);
 
         Utente user = userDAO.authenticate(email, hashedPassword);

@@ -2,7 +2,7 @@ package model;
 
 public enum Ruolo {
     ADMIN("Admin"),
-    UTENTE("Utente");
+    UTENTE("User");
 
     private final String ruolo;
 

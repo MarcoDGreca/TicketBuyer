@@ -54,18 +54,18 @@ public class AdminEventServlet extends HttpServlet {
 
     private void listEvents(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("events", eventDAO.getAllEvents());
-        request.getRequestDispatcher("/admin/eventList.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/manageEvent.jsp").forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/admin/eventForm.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/manageEvent.jsp").forward(request, response);
     }
 
     private void editEvent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int codiceEvento = Integer.parseInt(request.getParameter("codiceEvento"));
         Event existingEvent = eventDAO.getEventById(codiceEvento);
         request.setAttribute("event", existingEvent);
-        request.getRequestDispatcher("/admin/eventForm.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/manageEvent.jsp").forward(request, response);
     }
 
     private void deleteEvent(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -7,14 +7,12 @@
     Cart cart = (Cart) session.getAttribute("cart");
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Carrello</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/cart.css">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
     <jsp:include page="header.jsp" />

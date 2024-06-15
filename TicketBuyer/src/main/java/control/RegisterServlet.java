@@ -29,17 +29,21 @@ public class RegisterServlet extends HttpServlet {
         String nome = request.getParameter("name");
         String password = request.getParameter("password");
         String cognome = request.getParameter("surname");
-        String indirizzo = request.getParameter("address");
+        String via = request.getParameter("address");
+        String numero = request.getParameter("number");
+        String provincia = request.getParameter("province");
+        String citta = request.getParameter("city");
         String telefono = request.getParameter("phone");
-        String numero = request.getParameter("cell");
+        String numeroT = request.getParameter("cell");
         
         String hashedPassword = hashPassword(password);
+        String indirizzo = via + ", " + numero + ", " + citta + ", " + provincia;
 
-        Utente newUser = new Utente( email, hashedPassword, nome, cognome, indirizzo, telefono, numero, Ruolo.UTENTE);
+        Utente newUser = new Utente( email, hashedPassword, nome, cognome, indirizzo, telefono, numeroT, Ruolo.UTENTE);
 
         userDAO.addUser(newUser);
 
-        response.sendRedirect("login");
+        response.sendRedirect("login.jsp");
     }
     
     private String hashPassword(String password) {

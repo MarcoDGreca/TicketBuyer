@@ -44,9 +44,9 @@ public class ReviewDAO {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, review.getCodiceEvento());
-            statement.setString(2, review.getemailCliente());
+            statement.setString(2, review.getEmailCliente());
             statement.setInt(3, review.getVotazione());
-            statement.setString(4, review.gettesto());
+            statement.setString(4, review.getTesto());
             statement.setDate(5, review.getdataRecensione());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -59,9 +59,9 @@ public class ReviewDAO {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, review.getCodiceEvento());
-            statement.setString(2, review.getemailCliente());
+            statement.setString(2, review.getEmailCliente());
             statement.setInt(3, review.getVotazione());
-            statement.setString(4, review.gettesto());
+            statement.setString(4, review.getTesto());
             statement.setDate(5, review.getdataRecensione());
             statement.setInt(6, review.getCodiceRecensione());
             statement.executeUpdate();

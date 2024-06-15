@@ -1,57 +1,44 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
-<%@ page import="model.Order" %>
-<%@ page import="model.OrderDAO" %>
-
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-    
-<%@ page import="model.Order" %>
 <%@ page import="model.Utente" %>
+<%@ page import="model.Order" %>
 <%@ page import="java.util.List" %>
 <%
     Utente user = (Utente) session.getAttribute("user");
-    if (user == null) {
-        response.sendRedirect("login");
-        return;
-    }
-
-    OrderDAO orderDAO = new OrderDAO();
-    List<Order> orders = orderDAO.getOrdersByEmail(user.getEmail());
+    List<Order> orders = (List<Order>) request.getAttribute("orders");
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>I tuoi ordini</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/orders.css">
+    <title>Ordini</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <jsp:include page="header.jsp" />
-    <main>
-        <h1>I tuoi ordini</h1>
-        <%
-            if (orders != null && !orders.isEmpty()) {
-        %>
-            <ul>
-                <% for (Order order : orders) { %>
-                    <li>
-                        <p>Ordine: <%= order.getCodiceOrdine() %></p>
-                        <p>Data: <%= order.getDataAcquisto() %></p>
-                        <p>Prezzo totale: <%= order.getPrezzoTotale() %></p>
-                    </li>
+    <div id="page">
+        <jsp:include page="header.jsp" />
+        <section>
+            <h2>I miei ordini</h2>
+            <div class="order-list">
+                <% if (orders != null && !orders.isEmpty()) { %>
+                    <% for (Order order : orders) { %>
+                        <div class="order">
+                            <h3>Ordine <%= order.getCodiceOrdine() %></h3>
+                            <p><strong>Data:</strong> <%= order.getDataAcquisto() %></p>
+                            <p><strong>Stato:</strong> <%= order.getStato() %></p>
+                            <p><strong>Totale:</strong> €<%= order.getPrezzoTotale() %></p>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <p>Non ci sono ordini.</p>
                 <% } %>
-            </ul>
-        <%
-            } else {
-                out.println("<p>Non hai effettuato ordini.</p>");
-            }
-        %>
-    </main>
-    <jsp:include page="footer.jsp" />
+            </div>
+        </section>
+        <aside>
+ 
+        </aside>
+        <jsp:include page="footer.jsp" />
+    </div>
 </body>
 </html>
+
 

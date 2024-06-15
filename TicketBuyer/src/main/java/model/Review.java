@@ -35,11 +35,11 @@ public class Review {
         this.codiceEvento = codiceProdotto;
     }
     
-    public String getemailCliente() {
+    public String getEmailCliente() {
         return emailCliente;
     }
 
-    public void setemailCliente(String emailCliente) {
+    public void setEmailCliente(String emailCliente) {
         this.emailCliente = emailCliente;
     }
     
@@ -52,11 +52,11 @@ public class Review {
         this.votazione = votazione;
     }
     
-    public String gettesto() {
+    public String getTesto() {
         return testo;
     }
 
-    public void settesto(String testo) {
+    public void setTesto(String testo) {
         this.testo = testo;
     }
     

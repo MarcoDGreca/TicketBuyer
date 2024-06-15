@@ -5,16 +5,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Contatti</title>
-    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <jsp:include page="header.jsp" />
-    <main>
-        <h2>Contattaci</h2>
-        <p>Email: supporto@ticketBuyer.it</p>
-        <p>Telefono: +39 123 456 789</p>
-        <p>Indirizzo: Via Roma, 1, 00100 Roma, Italia</p>
-    </main>
-    <jsp:include page="footer.jsp" />
+    <div id="page">
+        <jsp:include page="header.jsp" />
+        <section>
+            <h2>Contattaci</h2>
+            <div class="contact">
+                <div>
+                    <label>Email:</label>
+                    <p>support@ticketbuyer.com</p>
+                </div>
+                <div>
+                    <label>Telefono:</label>
+                    <p>+39 123 456 7890</p>
+                </div>
+                <div>
+                    <label>Indirizzo:</label>
+                    <p>Via Roma, 1, 80100 Napoli NA, Italia</p>
+                </div>
+                <div>
+                    <label>Orari di apertura:</label>
+                    <p>Lunedì - Venerdì: 9:00 - 18:00</p>
+                </div>
+            </div>
+        </section>
+        <aside>
+
+        </aside>
+        <jsp:include page="footer.jsp" />
+    </div>
 </body>
 </html>
+
+
+
