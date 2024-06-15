@@ -25,7 +25,7 @@ public class ReviewDAO {
                 if (resultSet.next()) {
                     return new Review(
                         resultSet.getInt("codiceRecensione"),
-                        resultSet.getInt("codiceProdotto"),
+                        resultSet.getInt("codiceEvento"),
                         resultSet.getString("emailCliente"),
                         resultSet.getInt("votazione"),
                         resultSet.getString("testo"),
@@ -43,7 +43,7 @@ public class ReviewDAO {
         String query = "INSERT INTO Recensione (codiceEvento, emailCliente, votazione, testo, dataRecensione) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, review.getCodiceProdotto());
+            statement.setInt(1, review.getCodiceEvento());
             statement.setString(2, review.getemailCliente());
             statement.setInt(3, review.getVotazione());
             statement.setString(4, review.gettesto());
@@ -58,7 +58,7 @@ public class ReviewDAO {
         String query = "UPDATE Recensione SET codiceEvento = ?, emailCliente = ?, votazione = ?, testo = ?, dataRecensione = ? WHERE codiceRecensione = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, review.getCodiceProdotto());
+            statement.setInt(1, review.getCodiceEvento());
             statement.setString(2, review.getemailCliente());
             statement.setInt(3, review.getVotazione());
             statement.setString(4, review.gettesto());

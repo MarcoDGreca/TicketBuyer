@@ -26,7 +26,7 @@ public class TicketServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Ticket> tickets = ticketDAO.getAllTickets();
         request.setAttribute("tickets", tickets);
-        request.getRequestDispatcher("/WEB-INF/view/tickets.jsp").forward(request, response);
+        request.getRequestDispatcher("/tickets.jsp").forward(request, response);
     }
 
     @Override

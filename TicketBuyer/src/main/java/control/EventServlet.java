@@ -7,27 +7,24 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/events")
+@WebServlet("/home")
 public class EventServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
     private EventDAO eventDAO;
 
     @Override
     public void init() throws ServletException {
-        ServletContext context = getServletContext();
-        eventDAO = (EventDAO) context.getAttribute("eventDAO");
+        eventDAO = new EventDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Event> events = eventDAO.getAllEvents();
         request.setAttribute("events", events);
-        request.getRequestDispatcher("/WEB-INF/view/events.jsp").forward(request, response);
+        request.getRequestDispatcher("/home.jsp").forward(request, response);
     }
 
     @Override

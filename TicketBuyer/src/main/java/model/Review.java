@@ -4,15 +4,15 @@ import java.sql.Date;
 public class Review {
 
     private int codiceRecensione;
-    private int codiceProdotto;
+    private int codiceEvento;
     private String emailCliente;
     private int votazione;
     private String testo;
     private Date dataRecensione;
 
-    public Review(int codiceRecensione, int codiceProdotto, String emailCliente, int votazione, String testo, Date dataRecensione) {
+    public Review(int codiceRecensione, int codiceEvento, String emailCliente, int votazione, String testo, Date dataRecensione) {
         this.codiceRecensione = codiceRecensione;
-        this.codiceProdotto = codiceProdotto;
+        this.codiceEvento = codiceEvento;
         this.emailCliente = emailCliente;
         this.votazione = votazione;
         this.testo = testo;
@@ -23,16 +23,16 @@ public class Review {
         return codiceRecensione;
     }
 
-    public void setCodiceRecensione(int codiceRecensione) {
+    public void setCodiceEvento(int codiceRecensione) {
         this.codiceRecensione = codiceRecensione;
     }
     
-    public int getCodiceProdotto() {
-        return codiceProdotto;
+    public int getCodiceEvento() {
+        return codiceEvento;
     }
 
     public void setCodiceProdotto(int codiceProdotto) {
-        this.codiceProdotto = codiceProdotto;
+        this.codiceEvento = codiceProdotto;
     }
     
     public String getemailCliente() {

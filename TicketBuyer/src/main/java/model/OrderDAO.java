@@ -130,7 +130,7 @@ public class OrderDAO {
         String query = "UPDATE Ordine SET stato = ? WHERE codiceOrdine = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, "Rimborso in corso...");
+            statement.setString(1, "Richiesto Rimborso");
             statement.setInt(2, orderId);
             statement.executeUpdate();
         } catch (SQLException e) {

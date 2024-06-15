@@ -23,6 +23,7 @@ public class TicketDAO {
             statement.setInt(1, ticketId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
+                	if(!resultSet.getBoolean("deleted")) {
                     return new Ticket(
                         resultSet.getInt("codiceBiglietto"),
                         resultSet.getInt("codiceEvento"),
@@ -31,6 +32,7 @@ public class TicketDAO {
                         resultSet.getDouble("prezzo")
                     );
                 }
+              }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,6 +55,30 @@ public class TicketDAO {
                         resultSet.getDouble("prezzo")
                     );
                 tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+    
+    public List<Ticket> getTicketsByEventId(int eventId) {
+        List<Ticket> tickets = new ArrayList<>();
+        String query = "SELECT * FROM Biglietto WHERE codiceEvento = ? AND deleted = false";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, eventId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    tickets.add(new Ticket(
+                            resultSet.getInt("codiceBiglietto"),
+                            resultSet.getInt("codiceEvento"),
+                            resultSet.getString("tipo"),
+                            resultSet.getString("descrizione"),
+                            resultSet.getDouble("prezzo"))
+                    );
+                       
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

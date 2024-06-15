@@ -3,7 +3,6 @@ package control;
 import model.Order;
 import model.OrderDAO;
 import model.Utente;
-import util.DataSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,17 +29,12 @@ public class OrderServlet extends HttpServlet {
         Utente user = (Utente) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect("login");
+            response.sendRedirect("login.jsp");
             return;
         }
 
         List<Order> orders = orderDAO.getOrdersByEmail(user.getEmail());
         request.setAttribute("orders", orders);
-        request.getRequestDispatcher("/WEB-INF/view/orders.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+        request.getRequestDispatcher("/orders.jsp").forward(request, response);
     }
 }
