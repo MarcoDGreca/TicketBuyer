@@ -2,8 +2,7 @@ package control;
 
 import model.Ticket;
 import model.TicketDAO;
-import model.Cart;
-
+import util.DataSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
@@ -27,10 +27,10 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
+        List<Ticket> cart = (List<Ticket>) session.getAttribute("cart");
 
         if (cart == null) {
-            cart = new Cart();
+            cart = new ArrayList<>();
             session.setAttribute("cart", cart);
         }
 
@@ -53,24 +53,24 @@ public class CartServlet extends HttpServlet {
         }
     }
 
-    private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
+    private void addToCart(HttpServletRequest request, HttpServletResponse response, List<Ticket> cart) throws ServletException, IOException {
         int ticketId = Integer.parseInt(request.getParameter("ticketId"));
         Ticket ticket = ticketDAO.getTicketById(ticketId);
         if (ticket != null) {
-            cart.addTicket(ticket);
+            cart.add(ticket);
         }
         response.sendRedirect("cart?action=view");
     }
 
-    private void removeFromCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
+    private void removeFromCart(HttpServletRequest request, HttpServletResponse response, List<Ticket> cart) throws ServletException, IOException {
         int ticketId = Integer.parseInt(request.getParameter("ticketId"));
-        cart.removeTicket(ticketId);
+        cart.removeIf(ticket -> ticket.getCodiceBiglietto() == ticketId);
         response.sendRedirect("cart?action=view");
     }
 
-    private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
+    private void viewCart(HttpServletRequest request, HttpServletResponse response, List<Ticket> cart) throws ServletException, IOException {
         request.setAttribute("cart", cart);
-        request.getRequestDispatcher("cart.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/cart.jsp").forward(request, response);
     }
 
     @Override
@@ -78,6 +78,5 @@ public class CartServlet extends HttpServlet {
         doGet(request, response);
     }
 }
-
 
 

@@ -1,122 +1,149 @@
-@charset "ISO-8859-1";
-
-#page {
-    max-width: 1440px;
-    margin: auto;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #2a9d8f;
+/* Reset CSS */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-header {
+/* Body */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    padding: 0 20px;
+}
+
+/* Header, Nav, Footer */
+header, nav, footer {
     width: 100%;
+    background-color: #264653;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #264653;
-    color: white;
-    padding: 15px;
-    margin: 0;
+    padding: 10px 20px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .logo {
+    text-align: center;
+}
+
+header .logo img {
+    height: 50px;
 }
 
 header .auth-links {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    justify-content: center;
 }
 
 header .auth-links a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
 }
 
-header .logo img {
-    height: 80px;
-}
-
-nav {
-    background-color: #14213d;
-    padding: 20px;
-    margin: 10px 0;
+header .auth-links a:hover {
+    background-color: #2a9d8f;
 }
 
 nav ul {
-    list-style-type: none;
-    display: flex;
-    justify-content: center;
+    list-style: none;
     padding: 0;
     margin: 0;
-    gap: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 
 nav ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+nav ul li a:hover {
+    background-color: #2a9d8f;
 }
 
 footer {
-    width: 100%;
-    background-color: #264653;
-    color: white;
-    text-align: center;
+    background-color: #14213d;
     padding: 15px;
-    position: relative;
-    bottom: 0;
 }
 
 footer p {
     margin: 0;
 }
 
-section, aside {
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #ffffff;
+/* Main */
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+/* Welcome Section */
+.welcome-section {
+    background-color: #e9c46a;
+    padding: 40px 20px;
     border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    width: 100%;
 }
 
-.main-content {
+.welcome-section h1 {
+    margin-bottom: 20px;
+}
+
+.welcome-buttons {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 10px;
 }
 
-.event, .review, .order {
-    flex: 1 1 30%;
-    min-width: 200px;
-    margin: 20px 0;
-    padding: 20px;
+.welcome-buttons .button {
+    background-color: #f4a261;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.welcome-buttons .button:hover {
+    background-color: #e76f51;
+}
+
+/* Sections and Aside */
+section, aside {
     background-color: #ffffff;
+    padding: 20px;
+    margin: 20px 0;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.event img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px 8px 0 0;
-}
-
-.event h3, .review h3, .order h3 {
-    margin-top: 0;
-    font-size: 1.5em;
-}
-
-.event p, .review p, .order p {
-    margin: 10px 0;
-}
-
+/* Form */
 form {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
     background-color: #ffffff;
+    padding: 20px;
+    margin: 20px 0;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -152,8 +179,10 @@ form button:hover {
     background-color: #3498db;
 }
 
-.profile {
+/* Profile, Login, Register, Order List, Contact */
+.profile, .login, .register, .order-list, .contact {
     max-width: 600px;
+    width: 100%;
     margin: auto;
     padding: 20px;
     background-color: #ffffff;
@@ -161,114 +190,152 @@ form button:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.profile div {
+.profile div, .login div, .register div, .contact div, .order-list div {
     margin-bottom: 15px;
 }
 
-.profile label {
+.profile label, .login label, .register label, .contact label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-.profile input {
+.profile input, .login input, .register input, .contact input {
     width: 100%;
     padding: 10px;
     border: 1px solid #cccccc;
     border-radius: 4px;
 }
 
-.contact {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.contact div {
-    margin-bottom: 15px;
-}
-
-.contact label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
 .contact p {
     margin: 10px 0;
 }
 
-.welcome-section {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #e9c46a;
+/* Grid Layout for Event, Review, Order */
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.grid-item {
+    flex: 1 1 calc(33.333% - 20px);
+    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 40px;
+    overflow: hidden;
 }
 
-.welcome-section h1 {
-    margin-top: 0;
+.grid-item img {
+    width: 100%;
+    border-bottom: 1px solid #cccccc;
 }
 
-.welcome-buttons {
-    margin-top: 20px;
+.grid-item h3 {
+    font-size: 1.2em;
+    margin: 15px;
 }
 
-.welcome-buttons .button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 0 10px;
-    background-color: #f4a261;
+.grid-item p {
+    margin: 0 15px 15px;
+}
+
+/* Cart Item */
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #cccccc;
+}
+
+.cart-item img {
+    max-width: 80px;
+    margin-right: 10px;
+}
+
+.cart-item div {
+    flex: 1;
+}
+
+.cart-item .remove-button {
+    background-color: #e63946;
     color: white;
-    text-decoration: none;
+    border: none;
     border-radius: 4px;
+    cursor: pointer;
+    padding: 5px 10px;
 }
 
-.welcome-buttons .button:hover {
-    background-color: #e76f51;
+.cart-item .remove-button:hover {
+    background-color: #d62828;
 }
 
+.cart-total {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.cart-checkout {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.cart-checkout button {
+    padding: 10px 20px;
+    background-color: #264653;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cart-checkout button:hover {
+    background-color: #2a9d8f;
+}
+
+/* Responsive Design */
 @media screen and (max-width: 1000px) {
-    section, aside {
-        width: 100%;
-        margin: 0 0 20px 0;
+    .grid-item {
+        flex: 1 1 calc(50% - 20px);
     }
 
-    .event, .review, .order {
-        flex: 1 1 45%;
-    }
-
-    .welcome-buttons .button {
-        margin-bottom: 10px;
+    .welcome-buttons {
+        flex-direction: column;
+        align-items: center;
     }
 }
 
 @media screen and (max-width: 600px) {
     header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
     }
 
     header .auth-links {
+        flex-direction: column;
         text-align: center;
         margin-bottom: 10px;
     }
 
-    header .logo {
-        text-align: center;
-    }
-
     nav ul {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        gap: 10px;
     }
 
-    .event, .review, .order {
+    .grid-item {
         flex: 1 1 100%;
+    }
+
+    .welcome-section {
+        padding: 20px 10px;
+    }
+
+    .welcome-buttons .button {
+        width: 100%;
+        text-align: center;
     }
 }
 

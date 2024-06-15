@@ -9,6 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <title>TicketBuyer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
@@ -22,7 +23,6 @@
                 <a href="login.jsp">Login</a>
                 <a href="register.jsp">Registrati</a>
             <% } %>
-            <a href="cart">Carrello</a>
         </div>
         <div class="logo">
             <img src="${pageContext.request.contextPath}/img/logo.png" alt="TicketBuyer Logo">
@@ -33,6 +33,7 @@
             <li><a href="home.jsp">Home</a></li>
             <li><a href="contact.jsp">Contatti</a></li>
             <li><a href="search.jsp">Cerca</a></li>
+            <li><a href="cart.jsp">Carrello</a></li>
             <% if (user != null && user.getRuolo().equals(Ruolo.ADMIN)) { %>
                 <li><a href="admin/manageEvents.jsp">Gestisci Eventi</a></li>
                 <li><a href="admin/manageUsers.jsp">Gestisci Utenti</a></li>

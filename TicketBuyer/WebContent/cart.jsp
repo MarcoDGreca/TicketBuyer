@@ -1,46 +1,54 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-    
-<%@ page import="model.Cart" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="model.Ticket" %>
+<%@ page import="java.util.List" %>
 <%
-    Cart cart = (Cart) session.getAttribute("cart");
+    List<Ticket> cart = (List<Ticket>) session.getAttribute("cart");
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Carrello</title>
-    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
     <jsp:include page="header.jsp" />
     <main>
-        <h1>Il tuo carrello</h1>
-        <%
-            if (cart != null && !cart.getTickets().isEmpty()) {
-        %>
-            <ul>
-                <% for (Ticket ticket : cart.getTickets()) { %>
-                    <li>
-                        <p>Tipo: <%= ticket.getTipo() %></p>
-                        <p>Descrizione: <%= ticket.getDescrizione() %></p>
-                        <p>Prezzo: <%= ticket.getPrezzoUnitario() %> EUR</p>
-                        <a href="cart?action=remove&ticketId=<%= ticket.getCodiceBiglietto() %>">Rimuovi</a>
-                    </li>
-                <% } %>
-            </ul>
-            <p>Prezzo totale: <%= cart.getTotalPrice() %> EUR</p>
-            <form action="checkout" method="post">
-                <button type="submit">Procedi al pagamento</button>
-            </form>
-        <%
-            } else {
-                out.println("<p>Il carrello � vuoto.</p>");
-            }
-        %>
+        <h2>Il tuo carrello</h2>
+        <div class="cart-items">
+            <% if (cart != null && !cart.isEmpty()) { 
+                double total = 0.0;
+                for (Ticket ticket : cart) {
+                    total += ticket.getPrezzoUnitario();
+            %>
+            <div class="cart-item">
+                <div>
+                    <h3><%= ticket.getDescrizione() %></h3>
+                    <p>Prezzo: €<%= ticket.getPrezzoUnitario() %></p>
+                </div>
+                <form action="cart" method="post">
+                    <input type="hidden" name="ticketId" value="<%= ticket.getCodiceBiglietto() %>">
+                    <button class="remove-button" type="submit" name="action" value="remove">Rimuovi</button>
+                </form>
+            </div>
+            <% } %>
+            <div class="cart-total">
+                Totale: €<%= total %>
+            </div>
+            <div class="cart-checkout">
+                <form action="checkout" method="post">
+                    <button type="submit">Procedi al pagamento</button>
+                </form>
+            </div>
+            <% } else { %>
+            <p>Il carrello è vuoto.</p>
+            <% } %>
+        </div>
     </main>
-    <jsp:include page="footer.jsp" />
+    <footer>
+        <jsp:include page="footer.jsp" />
+    </footer>
 </body>
 </html>
+

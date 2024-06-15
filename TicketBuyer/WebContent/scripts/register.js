@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const surname = document.getElementById("surname");
         const address = document.getElementById("address");
         const number = document.getElementById("number");
+        const province = document.getElementById("province");
+        const city = document.getElementById("city");
         const phone = document.getElementById("phone");
 
         let valid = true;
@@ -80,6 +82,20 @@ document.addEventListener("DOMContentLoaded", function() {
             clearError(number);
         }
 
+        if (province.value === "") {
+            showError(province, "Provincia obbligatoria");
+            valid = false;
+        } else {
+            clearError(province);
+        }
+
+        if (city.value === "") {
+            showError(city, "Città obbligatoria");
+            valid = false;
+        } else {
+            clearError(city);
+        }
+
         if (!validatePhone(phone.value)) {
             showError(phone, "Numero di telefono non valido");
             valid = false;
@@ -89,6 +105,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (!valid) {
             event.preventDefault();
+        } else {
+            // Concatenate address fields before submission
+            address.value = `${address.value}, ${number.value}, ${city.value}, ${province.value}`;
         }
     });
 
@@ -104,20 +123,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function showError(element, message) {
         element.classList.add("error");
-        const errorElement = document.createElement("span");
-        errorElement.classList.add("error-message");
-        errorElement.textContent = message;
-        if (element.nextSibling) {
-            element.parentNode.removeChild(element.nextSibling);
+        let errorElement = element.nextElementSibling;
+        if (!errorElement || !errorElement.classList.contains("error-message")) {
+            errorElement = document.createElement("span");
+            errorElement.classList.add("error-message");
+            element.parentNode.appendChild(errorElement);
         }
-        element.parentNode.appendChild(errorElement);
+        errorElement.textContent = message;
     }
 
     function clearError(element) {
         element.classList.remove("error");
-        if (element.nextSibling) {
-            element.parentNode.removeChild(element.nextSibling);
+        let errorElement = element.nextElementSibling;
+        if (errorElement && errorElement.classList.contains("error-message")) {
+            errorElement.remove();
         }
     }
 });
-
