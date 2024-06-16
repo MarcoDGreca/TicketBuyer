@@ -137,5 +137,18 @@ public class OrderDAO {
             e.printStackTrace();
         }
     }
+    
+    public synchronized void addOrderDetail(int orderId, int ticketId, int quantity) {
+        String query = "INSERT INTO DettaglioOrdine (codiceOrdine, codiceBiglietto, quantita) VALUES (?, ?, ?)";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, orderId);
+            statement.setInt(2, ticketId);
+            statement.setInt(3, quantity);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

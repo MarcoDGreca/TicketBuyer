@@ -3,8 +3,7 @@ package control;
 import model.Order;
 import model.OrderDAO;
 import model.Stato;
-import model.Cart;
-import model.Utente;
+import model.Ticket;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.List;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
-
+    private static final long serialVersionUID = 1L;
     private OrderDAO orderDAO;
 
     @Override
@@ -27,25 +25,46 @@ public class CheckoutServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        List<Ticket> cart = (List<Ticket>) session.getAttribute("cart");
+        if (cart == null || cart.isEmpty()) {
+            request.setAttribute("errorMessage", "Il carrello è vuoto.");
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
+            return;
+        }
+
+        double totalPrice = cart.stream().mapToDouble(Ticket::getPrezzoUnitario).sum();
+        request.setAttribute("totalPrice", totalPrice);
+        request.getRequestDispatcher("/checkout.jsp").forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
-        Utente user = (Utente) session.getAttribute("user");
+        List<Ticket> cart = (List<Ticket>) session.getAttribute("cart");
+        String emailCliente = ((model.Utente) session.getAttribute("user")).getEmail();
 
-        if (cart != null && user != null) {
+        if (cart != null && !cart.isEmpty()) {
             Order order = new Order();
-            order.setEmailCliente(user.getEmail());
-            order.setPrezzoTotale(cart.getTotalPrice());
-            order.setDataAcquisto(Date.valueOf(LocalDate.now()));
-            order.setStato(Stato.COMPLETATO);
+            order.setEmailCliente(emailCliente);
+            order.setPrezzoTotale(cart.stream().mapToDouble(Ticket::getPrezzoUnitario).sum());
+            order.setDataAcquisto(new java.sql.Date(System.currentTimeMillis()));
+            order.setStato(Stato.IN_LAVORAZIONE);
 
             orderDAO.addOrder(order);
+            int orderId = order.getCodiceOrdine();
+
+            for (Ticket ticket : cart) {
+                orderDAO.addOrderDetail(orderId, ticket.getCodiceBiglietto(), 1);
+            }
 
             cart.clear();
-            response.sendRedirect("orders");
+            session.setAttribute("cart", cart);
+            response.sendRedirect("orderConfirmation.jsp");
         } else {
-            response.sendRedirect("cart");
+            request.setAttribute("errorMessage", "Il carrello è vuoto.");
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
         }
     }
 }
-

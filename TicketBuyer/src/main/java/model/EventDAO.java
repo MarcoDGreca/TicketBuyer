@@ -131,49 +131,65 @@ public class EventDAO {
         }
     }
     
-    public List<Event> searchEvents(String keyword, String searchType) {
+    public List<Event> searchEvents(String nome, String tipo, Date dataInizio, Date dataFine, Integer disponibilita, Double prezzoMax) {
         List<Event> events = new ArrayList<>();
-        String query = "SELECT * FROM Evento WHERE ";
-        switch (searchType) {
-            case "Codice":
-                query += "codiceEvento = ?";
-                break;
-            case "Luogo":
-                query += "luogo LIKE ?";
-                break;
-            case "Data":
-                query += "dataEvento = ?";
-                break;
-            case "Tipo":
-                query += "tipo = ?";
-                break;
-            case "Orario":
-                query += "orario = ?";
-                break;
-            default:
-                query += "nome LIKE ? OR luogo LIKE ? OR dataEvento = ? OR tipo = ? OR orario = ?";
-                break;
+        StringBuilder query = new StringBuilder(
+            "SELECT e.* FROM Evento e " +
+            "JOIN Biglietto b ON e.codiceEvento = b.codiceEvento " +
+            "WHERE 1=1");
+
+        if (nome != null && !nome.isEmpty()) {
+            query.append(" AND e.nome LIKE ?");
+        }
+        if (tipo != null && !tipo.isEmpty()) {
+            query.append(" AND e.tipo = ?");
+        }
+        if (dataInizio != null) {
+            query.append(" AND e.dataEvento >= ?");
+        }
+        if (dataFine != null) {
+            query.append(" AND e.dataEvento <= ?");
+        }
+        if (disponibilita != null) {
+            query.append(" AND e.disponibilita >= ?");
+        }
+        if (prezzoMax != null) {
+            query.append(" AND b.prezzoUnitario <= ?");
         }
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            String searchPattern = "%" + keyword + "%";
-            if (!searchType.equals("Data")) {
-                statement.setString(1, searchPattern);
-            } else {
-                statement.setDate(1, Date.valueOf(keyword));
+             PreparedStatement statement = connection.prepareStatement(query.toString())) {
+
+            int index = 1;
+            if (nome != null && !nome.isEmpty()) {
+                statement.setString(index++, "%" + nome + "%");
             }
+            if (tipo != null && !tipo.isEmpty()) {
+                statement.setString(index++, tipo);
+            }
+            if (dataInizio != null) {
+                statement.setDate(index++, dataInizio);
+            }
+            if (dataFine != null) {
+                statement.setDate(index++, dataFine);
+            }
+            if (disponibilita != null) {
+                statement.setInt(index++, disponibilita);
+            }
+            if (prezzoMax != null) {
+                statement.setDouble(index++, prezzoMax);
+            }
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Event event = new Event(
-                    		resultSet.getInt("codiceEvento"),
-                            resultSet.getString("nome"),
-                            resultSet.getString("luogo"),
-                            resultSet.getDate("dataEvento"),
-                            resultSet.getString("orario"),
-                            TipoEvento.fromString(resultSet.getString("tipo")),
-                            resultSet.getInt("disponibilita")
-                    );
+                    Event event = new Event();
+                    event.setCodiceEvento(resultSet.getInt("codiceEvento"));
+                    event.setNome(resultSet.getString("nome"));
+                    event.setLuogo(resultSet.getString("luogo"));
+                    event.setDataEvento(resultSet.getDate("dataEvento"));
+                    event.setOrario(resultSet.getString("orario"));
+                    event.setTipo(TipoEvento.fromString(resultSet.getString("tipo")));
+                    event.setDisponibilita(resultSet.getInt("disponibilita"));
                     events.add(event);
                 }
             }
@@ -182,7 +198,6 @@ public class EventDAO {
         }
         return events;
     }
-
-
+   
 }
 

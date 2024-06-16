@@ -99,7 +99,7 @@ public class AdminEventServlet extends HttpServlet {
             eventDAO.updateEvent(event);
         }
 
-        response.sendRedirect("events");
+        response.sendRedirect("home");
     }
 }
 

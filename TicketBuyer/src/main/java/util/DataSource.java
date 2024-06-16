@@ -10,16 +10,19 @@ public class DataSource {
     private String url;
     private String username;
     private String password;
+    
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Failed to load MySQL driver", e);
+        }
+    }
 
     private DataSource(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to load MySQL JDBC driver", e);
-        }
     }
 
     public static DataSource getInstance() {
@@ -39,3 +42,4 @@ public class DataSource {
         return DriverManager.getConnection(url, username, password);
     }
 }
+

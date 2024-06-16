@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    
 <%@ page import="model.Utente" %>
 <%@ page import="model.Event" %>
 <%@ page import="model.Review" %>
@@ -26,11 +25,11 @@
             <% if (user != null) { %>
                 <p>Ciao, <%= user.getNome() %> <%= user.getCognome() %>! Bentornato!</p>
                 <div class="welcome-buttons">
-                    <a href="profile" class="button">Profilo</a>
-                    <a href="orders" class="button">Ordini</a>
+                    <a href="${pageContext.request.contextPath}/profile.jsp" class="button">Profilo</a>
+                    <a href="${pageContext.request.contextPath}/orders.jsp" class="button">Ordini</a>
                 </div>
             <% } else { %>
-                <p>Benvenuto nel nostro sito. Effettua il <a href="login.jsp">login</a> o <a href="register.jsp">registrati</a>.</p>
+                <p>Benvenuto nel nostro sito. Effettua il <a href="${pageContext.request.contextPath}/login.jsp">login</a> o <a href="${pageContext.request.contextPath}/register.jsp">registrati</a>.</p>
             <% } %>
         </section>
         
@@ -47,7 +46,11 @@
                             <p><strong>Orario:</strong> <%= event.getOrario() %></p>
                             <p><strong>Tipo:</strong> <%= event.getTipo() %></p>
                             <p><strong>Disponibilità:</strong> <%= event.getDisponibilita() %></p>
-                            <a href="addToCart?eventId=<%= event.getCodiceEvento() %>" class="button">Aggiungi al Carrello</a>
+                            <form action="cart" method="get">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="ticketId" value="<%= event.getCodiceEvento() %>">
+                                <button type="submit" class="button">Aggiungi al Carrello</button>
+                            </form>
                         </div>
                     <% } %>
                 <% } else { %>
@@ -63,16 +66,16 @@
                     <% for (Review review : reviews) { %>
                         <div class="review">
                             <p><strong>Email:</strong> <%= review.getEmailCliente() %></p>
-                            <p><strong>Nome Evento:</strong> <%= events.stream().filter(e -> e.getCodiceEvento() == review.getCodiceEvento()).findFirst().get().getNome() %></p>
+                            <p><strong>Nome Evento:</strong> <%= events.stream().filter(e -> e.getCodiceEvento() == review.getCodiceEvento()).findFirst().orElse(new Event()).getNome() %></p>
                             <p><strong>Voto:</strong> <%= review.getVotazione() %>/10</p>
                             <p><%= review.getTesto() %></p>
                             <p><small><%= review.getdataRecensione() %></small></p>
                         </div>
                     <% } %>
-                    <a href="addReview" class="button">Aggiungi Recensione</a>
+                    <a href="${pageContext.request.contextPath}/addReview.jsp" class="button">Aggiungi Recensione</a>
                 <% } else { %>
                     <p>Non ci sono recensioni recenti.</p>
-                    <a href="addReview" class="button">Aggiungi Recensione</a>
+                    <a href="${pageContext.request.contextPath}/addReview.jsp" class="button">Aggiungi Recensione</a>
                 <% } %>
             </div>
         </section>
@@ -81,8 +84,3 @@
     </div>
 </body>
 </html>
-
-
-
-
-

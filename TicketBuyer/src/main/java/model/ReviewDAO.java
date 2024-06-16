@@ -90,7 +90,7 @@ public class ReviewDAO {
             while (resultSet.next()) {
                 Review review = new Review(
                     resultSet.getInt("codiceRecensione"),
-                    resultSet.getInt("codiceProdotto"),
+                    resultSet.getInt("codiceEvento"),
                     resultSet.getString("emailCliente"),
                     resultSet.getInt("votazione"),
                     resultSet.getString("testo"),

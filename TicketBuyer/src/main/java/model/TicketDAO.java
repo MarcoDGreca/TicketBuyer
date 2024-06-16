@@ -29,7 +29,7 @@ public class TicketDAO {
                         resultSet.getInt("codiceEvento"),
                         resultSet.getString("tipo"),
                         resultSet.getString("descrizione"),
-                        resultSet.getDouble("prezzo")
+                        resultSet.getDouble("prezzoUnitario")
                     );
                 }
               }
@@ -78,6 +78,32 @@ public class TicketDAO {
                             resultSet.getDouble("prezzo"))
                     );
                        
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+    
+    public synchronized List<Ticket> getTicketsByOrderId(int orderId) {
+        List<Ticket> tickets = new ArrayList<>();
+        String query = "SELECT b.codiceBiglietto, b.codiceEvento, b.tipo, b.descrizione, b.prezzoUnitario, b.deleted " +
+                       "FROM DettaglioOrdine d JOIN Biglietto b ON d.codiceBiglietto = b.codiceBiglietto " +
+                       "WHERE d.codiceOrdine = ? AND b.deleted = false";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, orderId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Ticket ticket = new Ticket(
+                        resultSet.getInt("codiceBiglietto"),
+                        resultSet.getInt("codiceEvento"),
+                        resultSet.getString("tipo"),
+                        resultSet.getString("descrizione"),
+                        resultSet.getDouble("prezzoUnitario")
+                    );
+                    tickets.add(ticket);
                 }
             }
         } catch (SQLException e) {

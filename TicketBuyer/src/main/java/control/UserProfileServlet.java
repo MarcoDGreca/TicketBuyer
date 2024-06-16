@@ -27,7 +27,7 @@ public class UserProfileServlet extends HttpServlet {
         Utente user = (Utente) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("/login.jsp");
             return;
         }
 
@@ -41,7 +41,7 @@ public class UserProfileServlet extends HttpServlet {
         Utente user = (Utente) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("/login.jsp");
             return;
         }
 
@@ -57,7 +57,7 @@ public class UserProfileServlet extends HttpServlet {
 
         userDAO.updateUser(user);
         session.setAttribute("user", user);
-        response.sendRedirect("profile");
+        response.sendRedirect(request.getContextPath() + "/profile.jsp");
     }
 }
 

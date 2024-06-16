@@ -2,7 +2,6 @@ package control;
 
 import model.Ticket;
 import model.TicketDAO;
-import util.DataSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +26,7 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        @SuppressWarnings("unchecked")
         List<Ticket> cart = (List<Ticket>) session.getAttribute("cart");
 
         if (cart == null) {
@@ -53,6 +53,25 @@ public class CartServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        @SuppressWarnings("unchecked")
+        List<Ticket> cart = (List<Ticket>) session.getAttribute("cart");
+
+        if (cart == null) {
+            cart = new ArrayList<>();
+            session.setAttribute("cart", cart);
+        }
+
+        String action = request.getParameter("action");
+        if ("update".equalsIgnoreCase(action)) {
+            updateCart(request, response, cart);
+        } else {
+            doGet(request, response);
+        }
+    }
+
     private void addToCart(HttpServletRequest request, HttpServletResponse response, List<Ticket> cart) throws ServletException, IOException {
         int ticketId = Integer.parseInt(request.getParameter("ticketId"));
         Ticket ticket = ticketDAO.getTicketById(ticketId);
@@ -68,15 +87,18 @@ public class CartServlet extends HttpServlet {
         response.sendRedirect("cart?action=view");
     }
 
+    private void updateCart(HttpServletRequest request, HttpServletResponse response, List<Ticket> cart) throws ServletException, IOException {
+        int ticketId = Integer.parseInt(request.getParameter("ticketId"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        Ticket ticketToUpdate = cart.stream().filter(ticket -> ticket.getCodiceBiglietto() == ticketId).findFirst().orElse(null);
+        if (ticketToUpdate != null) {
+            // Logica per aggiornare la quantità del biglietto
+        }
+        response.sendRedirect("cart?action=view");
+    }
+
     private void viewCart(HttpServletRequest request, HttpServletResponse response, List<Ticket> cart) throws ServletException, IOException {
         request.setAttribute("cart", cart);
-        request.getRequestDispatcher("/WEB-INF/view/cart.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+        request.getRequestDispatcher("/cart.jsp").forward(request, response);
     }
 }
-
-

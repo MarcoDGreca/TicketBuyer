@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/UserOrders")
+@WebServlet("/orders")
 public class UserOrderServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private OrderDAO orderDAO;
@@ -36,7 +36,7 @@ public class UserOrderServlet extends HttpServlet {
 
         List<Order> orders = orderDAO.getOrdersByEmail(user.getEmail());
         request.setAttribute("orders", orders);
-        request.getRequestDispatcher("/orderList.jsp").forward(request, response);
+        request.getRequestDispatcher("/orders.jsp").forward(request, response);
     }
 }
 
