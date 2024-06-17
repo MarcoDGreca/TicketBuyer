@@ -17,7 +17,7 @@ public class OrderDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public synchronized void addOrder(Order order) {
+    public synchronized int addOrder(Order order) {
         String query = "INSERT INTO Ordine (emailCliente, prezzoTotale, dataAcquisto, stato) VALUES (?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -29,6 +29,7 @@ public class OrderDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return order.getCodiceOrdine();
     }
 
     public synchronized Order getOrderById(int orderId) {

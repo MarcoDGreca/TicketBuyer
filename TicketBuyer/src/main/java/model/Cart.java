@@ -1,33 +1,48 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cart {
-    private List<Ticket> tickets;
+    private Map<Ticket, Integer> items;
 
     public Cart() {
-        tickets = new ArrayList<>();
+        items = new HashMap<>();
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
+    public void addItem(Ticket ticket) {
+        items.put(ticket, items.getOrDefault(ticket, 0) + 1);
     }
 
-    public void addTicket(Ticket ticket) {
-        tickets.add(ticket);
+    public void removeItem(Ticket ticket) {
+        items.remove(ticket);
     }
 
-    public void removeTicket(int ticketId) {
-        tickets.removeIf(ticket -> ticket.getCodiceBiglietto() == ticketId);
+    public void updateItem(Ticket ticket, int quantity) {
+        if (quantity > 0) {
+            items.replace(ticket, quantity);
+        } else {
+            items.remove(ticket);
+        }
+    }
+
+    public Map<Ticket, Integer> getItems() {
+        return items;
     }
 
     public double getTotalPrice() {
-        return tickets.stream().mapToDouble(Ticket::getPrezzoUnitario).sum();
+        double total = 0;
+        for (Map.Entry<Ticket, Integer> entry : items.entrySet()) {
+            total += entry.getKey().getPrezzoUnitario() * entry.getValue();
+        }
+        return total;
     }
 
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+    
     public void clear() {
-        tickets.clear();
+    	items.clear();
     }
 }
-

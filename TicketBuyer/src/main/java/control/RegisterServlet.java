@@ -43,7 +43,7 @@ public class RegisterServlet extends HttpServlet {
 
         userDAO.addUser(newUser);
 
-        response.sendRedirect("/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/home");
     }
     
     private String hashPassword(String password) {
