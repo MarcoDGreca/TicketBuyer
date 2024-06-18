@@ -1,52 +1,76 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="model.Event,model.Ticket,model.*, java.util.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="model.Event" %>
+<%@ page import="model.Review" %>
+<%@ page import="model.Utente" %>
+<%@ page import="java.util.List" %>
 <%
-    int eventId = Integer.parseInt(request.getParameter("eventId"));
-    EventDAO eventDAO = new EventDAO();
-    Event event = eventDAO.getEventById(eventId);
-    TicketDAO ticketDAO = new TicketDAO();
-    List<Ticket> tickets = ticketDAO.getTicketsByEventId(eventId);
+    Event event = (Event) request.getAttribute("event");
+    List<Review> reviews = (List<Review>) request.getAttribute("reviews");
+    Utente user = (Utente) request.getAttribute("user");
 %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="ISO-8859-1">
-    <title><%= event.getNome() %></title>
-    <link href="${pageContext.request.contextPath}/styles/style.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title><%= event != null ? event.getNome() : "Evento non trovato" %></title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-
-    <jsp:include page="header.jsp" />
-
-    <div id="main" class="clear">
-        <section class="event-details">
-            <h2><%= event.getNome() %></h2>
-            <p><strong>Luogo:</strong> <%= event.getLuogo() %></p>
-            <p><strong>Data:</strong> <%= event.getDataEvento() %></p>
-            <p><strong>Orario:</strong> <%= event.getOrario() %></p>
-            <p><strong>Tipo:</strong> <%= event.getTipo() %></p>
-            <p><strong>Disponibilità:</strong> <%= event.getDisponibilita() %></p>
+    <div id="page">
+        <jsp:include page="header.jsp" />
+        <section class="event-details-section">
+            <% if (event != null) { %>
+                <h2><%= event.getNome() %></h2>
+                <img src="${pageContext.request.contextPath}/img/<%= event.getCodiceEvento() %>.jpeg" alt="<%= event.getNome() %>">
+                <p><strong>Luogo:</strong> <%= event.getLuogo() %></p>
+                <p><strong>Data:</strong> <%= event.getDataEvento() %></p>
+                <p><strong>Orario:</strong> <%= event.getOrario() %></p>
+                <p><strong>Tipo:</strong> <%= event.getTipo() %></p>
+                <p><strong>DisponibilitÃ :</strong> <%= event.getDisponibilita() %></p>
+                <form action="cart" method="get">
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="ticketId" value="<%= event.getCodiceEvento() %>">
+                    <button type="submit" class="button">Aggiungi al Carrello</button>
+                </form>
+            <% } else { %>
+                <h2>Evento non trovato</h2>
+                <p>Ci dispiace, ma l'evento che stai cercando non esiste.</p>
+            <% } %>
         </section>
+        
+        <% if (event != null) { %>
+            <section class="reviews-section">
+                <h2>Recensioni</h2>
+                <div class="main-content">
+                    <% if (reviews != null && !reviews.isEmpty()) { %>
+                        <% for (Review review : reviews) { %>
+                            <div class="review">
+                                <p><strong>Email:</strong> <%= review.getEmailCliente() %></p>
+                                <p><strong>Nome Evento:</strong> <%= event.getNome() %></p>
+                                <p><strong>Voto:</strong> <%= review.getVotazione() %>/10</p>
+                                <p><%= review.getTesto() %></p>
+                                <p><small><%= review.getDataRecensione() %></small></p>
+                                <% if (user != null && user.getEmail().equals(review.getEmailCliente())) { %>
+                                    <form action="${pageContext.request.contextPath}/deleteReview" method="post" class="delete-review-form">
+                                        <input type="hidden" name="reviewId" value="<%= review.getCodiceRecensione() %>">
+                                        <button type="submit" class="delete-button">Elimina</button>
+                                    </form>
+                                <% } %>
+                            </div>
+                        <% } %>
+                        <a href="${pageContext.request.contextPath}/addReview?eventId=<%= event.getCodiceEvento() %>" class="button">Aggiungi Recensione</a>
+                    <% } else { %>
+                        <p>Non ci sono recensioni per questo evento.</p>
+                        <a href="${pageContext.request.contextPath}/addReview?eventId=<%= event.getCodiceEvento() %>" class="button">Aggiungi Recensione</a>
+                    <% } %>
+                </div>
+            </section>
+        <% } %>
 
-        <section class="tickets">
-            <h3>Biglietti Disponibili</h3>
-            <ul>
-                <% for (Ticket ticket : tickets) { %>
-                    <li>
-                        <p><strong>Tipo:</strong> <%= ticket.getTipo() %></p>
-                        <p><strong>Descrizione:</strong> <%= ticket.getDescrizione() %></p>
-                        <p><strong>Prezzo:</strong> &euro;<%= ticket.getPrezzoUnitario() %></p>
-                        <form action="cart" method="post">
-                            <input type="hidden" name="ticketId" value="<%= ticket.getCodiceBiglietto() %>">
-                            <button type="submit" name="action" value="add">Aggiungi al Carrello</button>
-                        </form>
-                    </li>
-                <% } %>
-            </ul>
-        </section>
+        <jsp:include page="footer.jsp" />
     </div>
-
-    <jsp:include page="footer.jsp" />
-
 </body>
 </html>
+
+
+

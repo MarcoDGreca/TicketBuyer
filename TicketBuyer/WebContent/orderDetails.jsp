@@ -49,6 +49,10 @@ List<Event> events = (List<Event>) request.getAttribute("events");
 				<form action="refundRequest" method="get">
 					<button type="submit" class="refund-button">Richiedi un rimborso</button>
 				</form>
+				
+				<form action="addReview" method="get">
+					<button type="submit" class="refund-button">Scrivi una Recensione</button>
+				</form>
 
 			</div>
 		</section>

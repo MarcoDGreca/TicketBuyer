@@ -133,63 +133,59 @@ public class EventDAO {
     
     public List<Event> searchEvents(String nome, String tipo, Date dataInizio, Date dataFine, Integer disponibilita, Double prezzoMax) {
         List<Event> events = new ArrayList<>();
-        StringBuilder query = new StringBuilder(
-            "SELECT e.* FROM Evento e " +
-            "JOIN Biglietto b ON e.codiceEvento = b.codiceEvento " +
-            "WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT e.* FROM Evento e JOIN Biglietto b ON e.codiceEvento = b.codiceEvento WHERE 1=1");
 
         if (nome != null && !nome.isEmpty()) {
-            query.append(" AND e.nome LIKE ?");
+            sql.append(" AND e.nome LIKE ?");
         }
         if (tipo != null && !tipo.isEmpty()) {
-            query.append(" AND e.tipo = ?");
+            sql.append(" AND e.tipo = ?");
         }
         if (dataInizio != null) {
-            query.append(" AND e.dataEvento >= ?");
+            sql.append(" AND e.dataEvento >= ?");
         }
         if (dataFine != null) {
-            query.append(" AND e.dataEvento <= ?");
+            sql.append(" AND e.dataEvento <= ?");
         }
         if (disponibilita != null) {
-            query.append(" AND e.disponibilita >= ?");
+            sql.append(" AND e.disponibilita >= ?");
         }
         if (prezzoMax != null) {
-            query.append(" AND b.prezzoUnitario <= ?");
+            sql.append(" AND b.prezzoUnitario <= ?");
         }
 
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query.toString())) {
-
-            int index = 1;
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
             if (nome != null && !nome.isEmpty()) {
-                statement.setString(index++, "%" + nome + "%");
+                ps.setString(paramIndex++, "%" + nome + "%");
             }
             if (tipo != null && !tipo.isEmpty()) {
-                statement.setString(index++, tipo);
+                ps.setString(paramIndex++, tipo);
             }
             if (dataInizio != null) {
-                statement.setDate(index++, dataInizio);
+                ps.setDate(paramIndex++, dataInizio);
             }
             if (dataFine != null) {
-                statement.setDate(index++, dataFine);
+                ps.setDate(paramIndex++, dataFine);
             }
             if (disponibilita != null) {
-                statement.setInt(index++, disponibilita);
+                ps.setInt(paramIndex++, disponibilita);
             }
             if (prezzoMax != null) {
-                statement.setDouble(index++, prezzoMax);
+                ps.setDouble(paramIndex++, prezzoMax);
             }
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     Event event = new Event();
-                    event.setCodiceEvento(resultSet.getInt("codiceEvento"));
-                    event.setNome(resultSet.getString("nome"));
-                    event.setLuogo(resultSet.getString("luogo"));
-                    event.setDataEvento(resultSet.getDate("dataEvento"));
-                    event.setOrario(resultSet.getString("orario"));
-                    event.setTipo(TipoEvento.fromString(resultSet.getString("tipo")));
-                    event.setDisponibilita(resultSet.getInt("disponibilita"));
+                    event.setCodiceEvento(rs.getInt("codiceEvento"));
+                    event.setNome(rs.getString("nome"));
+                    event.setOrario(rs.getString("orario"));
+                    event.setLuogo(rs.getString("luogo"));
+                    event.setDataEvento(rs.getDate("dataEvento"));
+                    event.setTipo(TipoEvento.fromString(rs.getString("tipo")));
+                    event.setDisponibilita(rs.getInt("disponibilita"));
                     events.add(event);
                 }
             }
@@ -198,6 +194,7 @@ public class EventDAO {
         }
         return events;
     }
+
    
 }
 

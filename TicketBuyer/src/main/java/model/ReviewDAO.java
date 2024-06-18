@@ -39,16 +39,16 @@ public class ReviewDAO {
         return null;
     }
 
-    public synchronized void addReview(Review review) {
-        String query = "INSERT INTO Recensione (codiceEvento, emailCliente, votazione, testo, dataRecensione) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, review.getCodiceEvento());
-            statement.setString(2, review.getEmailCliente());
-            statement.setInt(3, review.getVotazione());
-            statement.setString(4, review.getTesto());
-            statement.setDate(5, review.getdataRecensione());
-            statement.executeUpdate();
+    public void addReview(Review review) {
+        String sql = "INSERT INTO Recensione (codiceEvento, emailCliente, votazione, testo, dataRecensione) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, review.getCodiceEvento());
+            ps.setString(2, review.getEmailCliente());
+            ps.setInt(3, review.getVotazione());
+            ps.setString(4, review.getTesto());
+            ps.setDate(5, review.getDataRecensione());
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,7 +62,7 @@ public class ReviewDAO {
             statement.setString(2, review.getEmailCliente());
             statement.setInt(3, review.getVotazione());
             statement.setString(4, review.getTesto());
-            statement.setDate(5, review.getdataRecensione());
+            statement.setDate(5, review.getDataRecensione());
             statement.setInt(6, review.getCodiceRecensione());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -97,6 +97,30 @@ public class ReviewDAO {
                     resultSet.getDate("dataRecensione")
                 );
                 reviews.add(review);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
+    
+    public List<Review> getReviewsByEventId(int eventId) {
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT * FROM Recensione WHERE codiceEvento = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Review review = new Review();
+                    review.setCodiceRecensione(rs.getInt("codiceRecensione"));
+                    review.setCodiceEvento(rs.getInt("codiceEvento"));
+                    review.setEmailCliente(rs.getString("emailCliente"));
+                    review.setVotazione(rs.getInt("votazione"));
+                    review.setTesto(rs.getString("testo"));
+                    review.setDataRecensione(rs.getDate("dataRecensione"));
+                    reviews.add(review);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

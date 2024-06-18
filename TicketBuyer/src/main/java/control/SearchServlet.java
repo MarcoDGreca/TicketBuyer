@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {
@@ -33,31 +35,31 @@ public class SearchServlet extends HttpServlet {
         String dataInizioStr = request.getParameter("dataInizio");
         String dataFineStr = request.getParameter("dataFine");
         String disponibilitaStr = request.getParameter("disponibilita");
-        String prezzoMinStr = request.getParameter("prezzoMin");
         String prezzoMaxStr = request.getParameter("prezzoMax");
 
-        Date dataInizio = dataInizioStr != null && !dataInizioStr.isEmpty() ? Date.valueOf(dataInizioStr) : null;
-        Date dataFine = dataFineStr != null && !dataFineStr.isEmpty() ? Date.valueOf(dataFineStr) : null;
-        Integer disponibilita = disponibilitaStr != null && !disponibilitaStr.isEmpty() ? Integer.valueOf(disponibilitaStr) : null;
-        Double prezzoMax = prezzoMaxStr != null && !prezzoMaxStr.isEmpty() ? Double.valueOf(prezzoMaxStr) : null;
+        Date dataInizio = (dataInizioStr != null && !dataInizioStr.isEmpty()) ? Date.valueOf(dataInizioStr) : null;
+        Date dataFine = (dataFineStr != null && !dataFineStr.isEmpty()) ? Date.valueOf(dataFineStr) : null;
+        Integer disponibilita = (disponibilitaStr != null && !disponibilitaStr.isEmpty()) ? Integer.valueOf(disponibilitaStr) : null;
+        Double prezzoMax = (prezzoMaxStr != null && !prezzoMaxStr.isEmpty()) ? Double.valueOf(prezzoMaxStr) : null;
 
         List<Event> events = eventDAO.searchEvents(nome, tipo, dataInizio, dataFine, disponibilita, prezzoMax);
+        Set<Event> uniqueEvents = new HashSet<>(events);
 
         JSONArray jsonArray = new JSONArray();
-        for (Event event : events) {
+        for (Event event : uniqueEvents) {
             JSONObject jsonObject = new JSONObject();
             try {
-            	jsonObject.put("nome", event.getNome());
+                jsonObject.put("codiceEvento", event.getCodiceEvento());
+                jsonObject.put("nome", event.getNome());
                 jsonObject.put("luogo", event.getLuogo());
                 jsonObject.put("dataEvento", event.getDataEvento().toString());
                 jsonObject.put("orario", event.getOrario());
                 jsonObject.put("tipo", event.getTipo());
                 jsonObject.put("disponibilita", event.getDisponibilita());
                 jsonArray.put(jsonObject);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

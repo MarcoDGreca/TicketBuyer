@@ -158,5 +158,34 @@ public class OrderDAO {
             e.printStackTrace();
         }
     }
+    
+    public List<Event> getPurchasedEventsByUser(String email) {
+        List<Event> events = new ArrayList<>();
+        String sql = "SELECT e.* FROM Evento e " +
+                     "JOIN Biglietto b ON e.codiceEvento = b.codiceEvento " +
+                     "JOIN DettaglioOrdine do ON b.codiceBiglietto = do.codiceBiglietto " +
+                     "JOIN Ordine o ON do.codiceOrdine = o.codiceOrdine " +
+                     "WHERE o.emailCliente = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Event event = new Event();
+                    event.setCodiceEvento(rs.getInt("codiceEvento"));
+                    event.setNome(rs.getString("nome"));
+                    event.setOrario(rs.getString("orario"));
+                    event.setLuogo(rs.getString("luogo"));
+                    event.setDataEvento(rs.getDate("dataEvento"));
+                    event.setTipo(TipoEvento.fromString(rs.getString("tipo")));
+                    event.setDisponibilita(rs.getInt("disponibilita"));
+                    events.add(event);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
+    }
 }
 

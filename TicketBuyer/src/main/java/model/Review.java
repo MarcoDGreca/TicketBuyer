@@ -1,4 +1,5 @@
 package model;
+
 import java.sql.Date;
 
 public class Review {
@@ -9,6 +10,9 @@ public class Review {
     private int votazione;
     private String testo;
     private Date dataRecensione;
+
+    public Review() {
+    }
 
     public Review(int codiceRecensione, int codiceEvento, String emailCliente, int votazione, String testo, Date dataRecensione) {
         this.codiceRecensione = codiceRecensione;
@@ -23,18 +27,18 @@ public class Review {
         return codiceRecensione;
     }
 
-    public void setCodiceEvento(int codiceRecensione) {
+    public void setCodiceRecensione(int codiceRecensione) {
         this.codiceRecensione = codiceRecensione;
     }
-    
+
     public int getCodiceEvento() {
         return codiceEvento;
     }
 
-    public void setCodiceProdotto(int codiceProdotto) {
-        this.codiceEvento = codiceProdotto;
+    public void setCodiceEvento(int codiceEvento) {
+        this.codiceEvento = codiceEvento;
     }
-    
+
     public String getEmailCliente() {
         return emailCliente;
     }
@@ -42,16 +46,16 @@ public class Review {
     public void setEmailCliente(String emailCliente) {
         this.emailCliente = emailCliente;
     }
-    
+
     public int getVotazione() {
         return votazione;
     }
 
     public void setVotazione(int votazione) {
-    	if(votazione >=0 && votazione <=5)
-        this.votazione = votazione;
+        if(votazione >= 0 && votazione <= 10)
+            this.votazione = votazione;
     }
-    
+
     public String getTesto() {
         return testo;
     }
@@ -59,12 +63,12 @@ public class Review {
     public void setTesto(String testo) {
         this.testo = testo;
     }
-    
-    public Date getdataRecensione() {
+
+    public Date getDataRecensione() {
         return dataRecensione;
     }
 
-    public void setdataRecensione(Date dataRecensione) {
+    public void setDataRecensione(Date dataRecensione) {
         this.dataRecensione = dataRecensione;
     }
 }
