@@ -1,38 +1,61 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="model.Order" %>
-<%@ page import="model.Ticket" %>
-<%@ page import="java.util.List" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page import="model.Order"%>
+<%@ page import="model.Ticket"%>
+<%@ page import="model.Event"%>
+<%@ page import="java.util.List"%>
 <%
-    Order order = (Order) request.getAttribute("order");
-    List<Ticket> tickets = (List<Ticket>) request.getAttribute("tickets");
+List<Order> orders = (List<Order>) request.getAttribute("orders");
+List<Ticket> tickets = (List<Ticket>) request.getAttribute("tickets");
+List<Event> events = (List<Event>) request.getAttribute("events");
 %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Dettagli Ordine</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
+<meta charset="UTF-8">
+<title>Dettagli Ordine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
-        <jsp:include page="header.jsp" />
-        <section class="order-details-section">
-            <h2>Dettagli Ordine</h2>
-            <p><strong>Codice Ordine:</strong> <%= order.getCodiceOrdine() %></p>
-            <p><strong>Data:</strong> <%= order.getDataAcquisto() %></p>
-            <p><strong>Totale:</strong> €<%= order.getPrezzoTotale() %></p>
-            <p><strong>Stato:</strong> <%= order.getStato().getStato() %></p>
-            <h3>Biglietti</h3>
-            <ul class="ticket-list">
-                <% for (Ticket ticket : tickets) { %>
-                    <li class="ticket-item">
-                        <p><strong>Nome Evento:</strong> <%= ticket.getDescrizione() %></p>
-                        <p><strong>Prezzo:</strong> €<%= ticket.getPrezzoUnitario() %></p>
-                    </li>
-                <% } %>
-            </ul>
-        </section>
-        <jsp:include page="footer.jsp" />
-    </div>
+	<div id="page">
+		<jsp:include page="header.jsp" />
+		<%
+		if (orders != null && !orders.isEmpty()) {
+		%>
+		<section class="orders-section">
+			<h2>I Tuoi Ordini</h2>
+			<div class="main-content">
+				<%
+				for (Order order : orders) {
+				%>
+				<div class="order">
+					<p>
+						<strong>Codice Ordine:</strong>
+						<%=order.getCodiceOrdine()%></p>
+					<p>
+						<strong>Data:</strong>
+						<%=order.getDataAcquisto()%></p>
+					<p>
+						<strong>Totale:</strong> €<%=order.getPrezzoTotale()%></p>
+					<p>
+						<strong>Stato:</strong>
+						<%=order.getStato().getStato()%></p>
+				</div>
+				<%
+				}
+				%>
+
+				<form action="refundRequest" method="get">
+					<button type="submit" class="refund-button">Richiedi un rimborso</button>
+				</form>
+
+			</div>
+		</section>
+		<%
+		}
+		%>
+		<jsp:include page="footer.jsp" />
+	</div>
 </body>
 </html>

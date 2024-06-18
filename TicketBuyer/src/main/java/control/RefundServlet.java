@@ -1,9 +1,7 @@
 package control;
 
-import model.Order;
 import model.OrderDAO;
 import model.Utente;
-import util.DataSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
+import java.sql.SQLException;
 
-@WebServlet("/orders")
-public class UserOrderServlet extends HttpServlet {
+@WebServlet("/refund")
+public class RefundServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private OrderDAO orderDAO;
 
@@ -25,18 +23,21 @@ public class UserOrderServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Utente user = (Utente) session.getAttribute("user");
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
 
-        if (user == null) {
-            response.sendRedirect("login");
-            return;
+        if (user != null) {
+            try {
+                orderDAO.requestRefund(orderId, user.getEmail());
+                response.sendRedirect("refundConfirmation.jsp");
+            } catch (SQLException e) {
+                throw new ServletException("Errore nella richiesta di rimborso", e);
+            }
+        } else {
+            response.sendRedirect("login.jsp");
         }
-
-        List<Order> orders = orderDAO.getOrdersByEmail(user.getEmail());
-        request.setAttribute("orders", orders);
-        request.getRequestDispatcher("/orders.jsp").forward(request, response);
     }
 }
 

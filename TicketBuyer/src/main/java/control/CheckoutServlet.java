@@ -5,7 +5,6 @@ import model.Order;
 import model.OrderDAO;
 import model.Stato;
 import model.Ticket;
-import model.Utente;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
@@ -30,7 +30,7 @@ public class CheckoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
-        if (cart == null || cart.getItems().isEmpty()) {
+        if (cart == null || cart.isEmpty()) {
             request.setAttribute("errorMessage", "Il carrello è vuoto.");
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
             return;
@@ -45,34 +45,34 @@ public class CheckoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
-        Utente user = (Utente) session.getAttribute("user");
+        String emailCliente = ((model.Utente) session.getAttribute("user")).getEmail();
 
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        if (cart != null && !cart.getItems().isEmpty()) {
+        if (cart != null && !cart.isEmpty()) {
             Order order = new Order();
-            order.setEmailCliente(user.getEmail());
+            order.setEmailCliente(emailCliente);
             order.setPrezzoTotale(cart.getTotalPrice());
             order.setDataAcquisto(new java.sql.Date(System.currentTimeMillis()));
             order.setStato(Stato.IN_LAVORAZIONE);
 
-            orderDAO.addOrder(order);
-            int orderId = order.getCodiceOrdine();
+            try {
+                int orderId = orderDAO.addOrder(order);
 
-            for (Map.Entry<Ticket, Integer> entry : cart.getItems().entrySet()) {
-                orderDAO.addOrderDetail(orderId, entry.getKey().getCodiceBiglietto(), entry.getValue());
+                for (Ticket ticket : cart.getItems().keySet()) {
+                    int quantity = cart.getItems().get(ticket);
+                    orderDAO.addOrderDetail(orderId, ticket.getCodiceBiglietto(), quantity);
+                }
+
+                cart.clear();
+                session.setAttribute("cart", cart);
+                response.sendRedirect(request.getContextPath() + "/orderConfirmation.jsp");
+            } catch (SQLException e) {
+                throw new ServletException("Errore nella creazione dell'ordine", e);
             }
-
-            cart.clear();
-            session.setAttribute("cart", cart);
-            response.sendRedirect("orderConfirmation.jsp");
         } else {
             request.setAttribute("errorMessage", "Il carrello è vuoto.");
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
         }
     }
 }
+
 

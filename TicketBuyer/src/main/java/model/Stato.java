@@ -1,9 +1,9 @@
 package model;
 
 public enum Stato {
-    IN_LAVORAZIONE("In lavorazione"),
+	IN_LAVORAZIONE("In lavorazione"),
     COMPLETATO("Completato"),
-	RIMBORSO("Richiesto Rimborso");
+    RICHIESTO_RIMBORSO("Richiesto Rimborso");
 
     private final String stato;
 
@@ -12,7 +12,7 @@ public enum Stato {
     }
 
     public String getStato() {
-        return stato;
+        return this.stato;
     }
 
     public static Stato fromString(String stato) {

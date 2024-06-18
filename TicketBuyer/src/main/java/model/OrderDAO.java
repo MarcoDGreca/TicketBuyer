@@ -17,19 +17,28 @@ public class OrderDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public synchronized int addOrder(Order order) {
-        String query = "INSERT INTO Ordine (emailCliente, prezzoTotale, dataAcquisto, stato) VALUES (?, ?, ?, ?)";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, order.getEmailCliente());
-            statement.setDouble(2, order.getPrezzoTotale());
-            statement.setDate(3, order.getDataAcquisto());
-            statement.setString(4, order.getStato().getStato());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public int addOrder(Order order) throws SQLException {
+        String sql = "INSERT INTO Ordine (emailCliente, prezzoTotale, dataAcquisto, stato) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, order.getEmailCliente());
+            ps.setDouble(2, order.getPrezzoTotale());
+            ps.setDate(3, order.getDataAcquisto());
+            ps.setString(4, order.getStato().getStato());
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creazione ordine fallita.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creazione ordine fallita.");
+                }
+            }
         }
-        return order.getCodiceOrdine();
     }
 
     public synchronized Order getOrderById(int orderId) {
@@ -117,7 +126,7 @@ public class OrderDAO {
                     order.setEmailCliente(resultSet.getString("emailCliente"));
                     order.setPrezzoTotale(resultSet.getDouble("prezzoTotale"));
                     order.setDataAcquisto(resultSet.getDate("dataAcquisto"));
-                    order.setStato(Stato.valueOf(resultSet.getString("stato")));
+                    order.setStato(Stato.valueOf(resultSet.getString("stato").toUpperCase().replace(" ", "_")));
                     orders.add(order);
                 }
             }
@@ -127,15 +136,13 @@ public class OrderDAO {
         return orders;
     }
 
-    public synchronized void requestRefund(int orderId) {
-        String query = "UPDATE Ordine SET stato = ? WHERE codiceOrdine = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, "Richiesto Rimborso");
-            statement.setInt(2, orderId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void requestRefund(int orderId, String emailCliente) throws SQLException {
+        String sql = "UPDATE Ordine SET stato = 'Richiesto Rimborso' WHERE codiceOrdine = ? AND emailCliente = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ps.setString(2, emailCliente);
+            ps.executeUpdate();
         }
     }
     

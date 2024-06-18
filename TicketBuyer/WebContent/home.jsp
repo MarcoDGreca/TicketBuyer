@@ -1,13 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="model.Utente" %>
 <%@ page import="model.Event" %>
+<%@ page import="model.Order" %>
 <%@ page import="model.Review" %>
 <%@ page import="java.util.List" %>
 <%
     Utente user = (Utente) session.getAttribute("user");
     List<Event> events = (List<Event>) request.getAttribute("events");
     List<Review> reviews = (List<Review>) request.getAttribute("reviews");
+
 %>
 <!DOCTYPE html>
 <html>
@@ -26,7 +27,7 @@
                 <p>Ciao, <%= user.getNome() %> <%= user.getCognome() %>! Bentornato!</p>
                 <div class="welcome-buttons">
                     <a href="${pageContext.request.contextPath}/profile.jsp" class="button">Profilo</a>
-                    <a href="${pageContext.request.contextPath}/orders.jsp" class="button">Ordini</a>
+                    <a href="${pageContext.request.contextPath}/orderDetails" class="button">Ordini</a>
                 </div>
             <% } else { %>
                 <p>Benvenuto nel nostro sito. Effettua il <a href="${pageContext.request.contextPath}/login.jsp">login</a> o <a href="${pageContext.request.contextPath}/register.jsp">registrati</a>.</p>
@@ -39,13 +40,14 @@
                 <% if (events != null && !events.isEmpty()) { %>
                     <% for (Event event : events) { %>
                         <div class="event">
-                            <img src="${pageContext.request.contextPath}/img/event<%= event.getCodiceEvento() %>.jpg" alt="<%= event.getNome() %>">
+                            <img src="${pageContext.request.contextPath}/img/<%= event.getCodiceEvento() %>.jpeg" alt="<%= event.getNome() %>">
                             <h3><%= event.getNome() %></h3>
                             <p><strong>Luogo:</strong> <%= event.getLuogo() %></p>
                             <p><strong>Data:</strong> <%= event.getDataEvento() %></p>
                             <p><strong>Orario:</strong> <%= event.getOrario() %></p>
                             <p><strong>Tipo:</strong> <%= event.getTipo() %></p>
                             <p><strong>Disponibilità:</strong> <%= event.getDisponibilita() %></p>
+                            <a href="event.jsp?eventId=<%= event.getCodiceEvento() %>" class="button">Visualizza Evento</a>
                             <form action="cart" method="get">
                                 <input type="hidden" name="action" value="add">
                                 <input type="hidden" name="ticketId" value="<%= event.getCodiceEvento() %>">
@@ -79,7 +81,7 @@
                 <% } %>
             </div>
         </section>
-        
+
         <jsp:include page="footer.jsp" />
     </div>
 </body>

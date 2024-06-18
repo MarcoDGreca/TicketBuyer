@@ -17,7 +17,7 @@
         <div class="auth-links">
             <% if (user != null) { %>
                 <a href="${pageContext.request.contextPath}/profile.jsp">Profilo</a>
-                <a href="${pageContext.request.contextPath}/orders.jsp">Ordini</a>
+                <a href="${pageContext.request.contextPath}/orderDetails">Ordini</a>
                 <a href="${pageContext.request.contextPath}/logout">Logout</a>
             <% } else { %>
                 <a href="${pageContext.request.contextPath}/login.jsp">Login</a>

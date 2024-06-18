@@ -33,7 +33,7 @@
                         int quantity = entry.getValue();
                 %>
                 <tr>
-                    <td><img src="img/ticket<%=ticket.getCodiceBiglietto()%>.jpg" alt="<%=ticket.getDescrizione()%>"></td>
+                    <td><img src="img/ticket<%=ticket.getCodiceBiglietto()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
                     <td><%=ticket.getDescrizione()%></td>
                     <td> 
                         <form action="cart" method="get">

@@ -16,16 +16,14 @@ public class OrderDetailDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public synchronized void addOrderDetail(OrderDetail orderDetail) {
-        String query = "INSERT INTO DettaglioOrdine (codiceOrdine, codiceBiglietto, quantita) VALUES (?, ?, ?)";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, orderDetail.getCodiceOrdine());
-            statement.setInt(2, orderDetail.getCodiceBiglietto());
-            statement.setInt(3, orderDetail.getQuantita());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void addOrderDetail(int orderId, int ticketId, int quantity) throws SQLException {
+        String sql = "INSERT INTO DettaglioOrdine (codiceOrdine, codiceBiglietto, quantita) VALUES (?, ?, ?)";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ps.setInt(2, ticketId);
+            ps.setInt(3, quantity);
+            ps.executeUpdate();
         }
     }
 

@@ -23,10 +23,10 @@
                         <% for (Map.Entry<Ticket, Integer> entry : cart.getItems().entrySet()) { %>
                             <li class="cart-item">
                                 <div>
-                                    <p><strong>Nome Evento:</strong> <%= entry.getKey().getDescrizione() %></p>
-                                    <p><strong>Prezzo Unitario:</strong> €<%= entry.getKey().getPrezzoUnitario() %></p>
+                                    <p><strong>Nome Prodotto:</strong> <%= entry.getKey().getDescrizione() %></p>
+                                    <p><strong>Prezzo Unitario:</strong> &euro;<%= entry.getKey().getPrezzoUnitario() %></p>
                                     <p><strong>Quantit&agrave;:</strong> <%= entry.getValue() %></p>
-                                    <p><strong>Totale:</strong> €<%= entry.getKey().getPrezzoUnitario() * entry.getValue() %></p>
+                                    <p><strong>Totale Prodotto:</strong> &euro;<%= entry.getKey().getPrezzoUnitario() * entry.getValue() %></p>
                                 </div>
                             </li>
                         <% } %>

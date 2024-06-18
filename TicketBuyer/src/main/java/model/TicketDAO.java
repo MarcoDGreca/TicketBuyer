@@ -75,7 +75,7 @@ public class TicketDAO {
                             resultSet.getInt("codiceEvento"),
                             resultSet.getString("tipo"),
                             resultSet.getString("descrizione"),
-                            resultSet.getDouble("prezzo"))
+                            resultSet.getDouble("prezzoUnitario"))
                     );
                        
                 }
