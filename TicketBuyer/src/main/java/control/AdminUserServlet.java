@@ -1,7 +1,7 @@
 package control;
 
-import model.Event;
-import model.EventDAO;
+import model.Utente;
+import model.UtenteDAO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,31 +11,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/manageEvents")
-public class AdminEventServlet extends HttpServlet {
+@WebServlet("/manageUsers")
+public class AdminUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private EventDAO eventDAO;
+    private UtenteDAO userDAO;
 
     @Override
     public void init() throws ServletException {
-        eventDAO = new EventDAO();
+    	userDAO = new UtenteDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Event> events = eventDAO.getAllEvents();
-        request.setAttribute("events", events);
-        request.getRequestDispatcher("/admin/manageEvents.jsp").forward(request, response);
+        List<Utente> users = userDAO.getAllUsers();
+        request.setAttribute("users", users);
+        request.getRequestDispatcher("/manageUsers.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter("email");
         String action = request.getParameter("action");
-        if (action != null && action.equals("delete")) {
-            int id = Integer.parseInt(request.getParameter("eventID"));
-            eventDAO.deleteEvent(id);
+        if ("delete".equals(action)) {
+        	userDAO.deleteUser(email);
+        } else if ("promote".equals(action)) {
+        	//userDAO.promoteUserToAdmin(email);
         }
-        response.sendRedirect(request.getContextPath() + "/admin/manageEvents");
+        response.sendRedirect("manageUsers");
     }
 }
-

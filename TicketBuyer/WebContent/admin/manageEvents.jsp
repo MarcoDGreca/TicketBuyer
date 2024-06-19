@@ -1,57 +1,63 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-
-<%@ page import="model.Utente" %>
-<%@ page import="model.Ruolo" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="model.Event" %>
-<%@ page import="model.EventDAO" %>
 <%@ page import="java.util.List" %>
 <%
-    Utente user = (Utente) session.getAttribute("user");
-    if (user == null || !user.getRuolo().equals(Ruolo.ADMIN)) {
-        response.sendRedirect("login");
-        return;
-    }
-
-    EventDAO eventDAO = new EventDAO();
-    List<Event> events = eventDAO.getAllEvents();
+    List<Event> events = (List<Event>) request.getAttribute("events");
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Gestisci Eventi</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Eventi</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
     <jsp:include page="/header.jsp" />
-    <main>
-        <h1>Gestisci Eventi</h1>
-        <form action="addEvent" method="post">
-            <input type="text" name="nome" placeholder="Nome Evento" required>
-            <input type="text" name="luogo" placeholder="Luogo" required>
-            <input type="date" name="dataEvento" required>
-            <input type="text" name="orario" placeholder="Orario" required>
-            <input type="text" name="tipo" placeholder="Tipo Evento" required>
-            <input type="number" name="disponibilita" placeholder="Disponibilità" required>
-            <button type="submit">Aggiungi Evento</button>
-        </form>
-        <ul>
-            <% for (Event event : events) { %>
-                <li>
-                    <p>Nome: <%= event.getNome() %></p>
-                    <p>Luogo: <%= event.getLuogo() %></p>
-                    <p>Data: <%= event.getDataEvento() %></p>
-                    <p>Orario: <%= event.getOrario() %></p>
-                    <p>Tipo: <%= event.getTipo() %></p>
-                    <p>Disponibilità: <%= event.getDisponibilita() %></p>
-                    <a href="editEvent?eventId=<%= event.getCodiceEvento() %>">Modifica</a>
-                    <a href="deleteEvent?eventId=<%= event.getCodiceEvento() %>">Elimina</a>
-                </li>
-            <% } %>
-        </ul>
-    </main>
+    <div class="main-content">
+        <h1>Gestione Eventi</h1>
+        <a href="${pageContext.request.contextPath}/admin/addEvent.jsp" class="button">Aggiungi Nuovo Evento</a>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Luogo</th>
+                    <th>Data</th>
+                    <th>Orario</th>
+                    <th>Tipo</th>
+                    <th>Disponibilità</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (events != null && !events.isEmpty()) { %>
+                    <% for (Event event : events) { %>
+                        <tr>
+                            <td><%= event.getNome() %></td>
+                            <td><%= event.getLuogo() %></td>
+                            <td><%= event.getDataEvento() %></td>
+                            <td><%= event.getOrario() %></td>
+                            <td><%= event.getTipo() %></td>
+                            <td><%= event.getDisponibilita() %></td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/admin/updateEvent?id=<%= event.getCodiceEvento() %>" class="button">Modifica</a>
+                                <form action="${pageContext.request.contextPath}/admin/manageEvents?action=delete" method="post" style="display:inline;">
+                                    <input type="hidden" name="eventID" value="<%= event.getCodiceEvento() %>">
+                                    <button type="submit" class="button">Elimina</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% } %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="7">Nessun evento disponibile.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
     <jsp:include page="/footer.jsp" />
 </body>
 </html>
+
+
+

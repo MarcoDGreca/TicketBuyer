@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <p>Data: ${event.dataEvento}</p>
                     <p>Orario: ${event.orario}</p>
                     <p>Tipo: ${event.tipo}</p>
-                    <a href="event.jsp?eventId=${event.codiceEvento}" class="button">Visualizza Evento</a>
+                    <a href="event?eventId=${event.codiceEvento}" class="button">Visualizza Evento</a>
                 `;
                 results.appendChild(eventDiv);
             });

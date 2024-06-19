@@ -32,7 +32,7 @@ public class CartServlet extends HttpServlet {
             session.setAttribute("cart", cart);
         }
 
-        String action = request.getParameter("action");
+        String action = request.getParameter("actionC");
         if (action != null) {
             switch (action) {
                 case "add":
@@ -56,6 +56,7 @@ public class CartServlet extends HttpServlet {
     private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
         int ticketId = Integer.parseInt(request.getParameter("ticketId"));
         Ticket ticket = ticketDAO.getTicketById(ticketId);
+        System.out.println(ticketId);
         if (ticket != null) {
             cart.addItem(ticket);
         }

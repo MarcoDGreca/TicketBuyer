@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//WebContent/admin/manageOrders.jsp=UTF-8
 encoding//WebContent/cart.jsp=UTF-8
 encoding//WebContent/checkout.jsp=UTF-8
+encoding//WebContent/event.jsp=UTF-8
 encoding/<project>=UTF-8

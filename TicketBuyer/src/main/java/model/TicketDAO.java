@@ -112,4 +112,47 @@ public class TicketDAO {
         return tickets;
     }
 
+    public void addTicket(Ticket ticket) {
+        String sql = "INSERT INTO Biglietto (codiceEvento, tipo, descrizione, prezzoUnitario, deleted) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, ticket.getCodiceEvento());
+            ps.setString(2, ticket.getTipo());
+            ps.setString(3, ticket.getDescrizione());
+            ps.setDouble(4, ticket.getPrezzoUnitario());
+            ps.setBoolean(5, false);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteTicket(int ticketId) {
+        String sql = "UPDATE Biglietto SET deleted = true WHERE codiceBiglietto = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, ticketId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateTicket(Ticket ticket) {
+        String sql = "UPDATE Biglietto SET tipo = ?, descrizione = ?, prezzoUnitario = ? WHERE codiceBiglietto = ?";
+
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, ticket.getTipo());
+            ps.setString(2, ticket.getDescrizione());
+            ps.setDouble(3, ticket.getPrezzoUnitario());
+            ps.setInt(4, ticket.getCodiceBiglietto());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -2,35 +2,33 @@ package control;
 
 import model.Event;
 import model.EventDAO;
-import model.Order;
-import model.OrderDAO;
-import model.Review;
-import model.ReviewDAO;
 import model.Ticket;
 import model.TicketDAO;
-import model.Utente;
+import model.Review;
+import model.ReviewDAO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private EventDAO eventDAO;
+    private TicketDAO ticketDAO;
     private ReviewDAO reviewDAO;
-    private OrderDAO orderDAO;
 
     @Override
     public void init() throws ServletException {
         eventDAO = new EventDAO();
+        ticketDAO = new TicketDAO();
         reviewDAO = new ReviewDAO();
-        orderDAO = new OrderDAO();
         System.out.println("HomeServlet initialized.");
     }
 
@@ -39,12 +37,18 @@ public class HomeServlet extends HttpServlet {
         System.out.println("HomeServlet doGet called.");
         List<Event> events = eventDAO.getAllEvents();
         List<Review> reviews = reviewDAO.getAllReviews();
-        
-        request.setAttribute("reviews", reviews);
+        Map<Integer, List<Ticket>> eventTicketsMap = new HashMap<>();
+
+        for (Event event : events) {
+            List<Ticket> tickets = ticketDAO.getTicketsByEventId(event.getCodiceEvento());
+            eventTicketsMap.put(event.getCodiceEvento(), tickets);
+        }
+
         request.setAttribute("events", events);
+        request.setAttribute("reviews", reviews);
+        request.setAttribute("eventTicketsMap", eventTicketsMap);
 
         request.getRequestDispatcher("/home.jsp").forward(request, response);
     }
 }
-
 

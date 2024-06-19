@@ -37,7 +37,7 @@
                     <td><%=ticket.getDescrizione()%></td>
                     <td> 
                         <form action="cart" method="get">
-                            <input type="hidden" name="action" value="update">
+                            <input type="hidden" name="actionC" value="update">
                             <input type="hidden" name="ticketId" value="<%=ticket.getCodiceBiglietto()%>">
                             <input type="number" name="quantity" value="<%=quantity%>" min="1">
                             <button type="submit">Aggiorna</button>
@@ -46,7 +46,7 @@
                     <td>&euro;<%=String.format("%.2f", ticket.getPrezzoUnitario() * quantity)%></td>
                     <td>
                         <form action="cart" method="get">
-                            <input type="hidden" name="action" value="remove">
+                            <input type="hidden" name="actionC" value="remove">
                             <input type="hidden" name="ticketId" value="<%=ticket.getCodiceBiglietto()%>">
                             <button type="submit" class="remove-button">Rimuovi</button>
                         </form>

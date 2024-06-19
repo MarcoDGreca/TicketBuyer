@@ -10,6 +10,7 @@ public class Event {
     private String orario;
     private TipoEvento tipo;
     private int disponibilita;
+    private String image;
 
     public Event() {}
 
@@ -77,6 +78,14 @@ public class Event {
 
     public void setDisponibilita(int disponibilita) {
         this.disponibilita = disponibilita;
+    }
+    
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }

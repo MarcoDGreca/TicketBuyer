@@ -1,13 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="model.Utente" %>
-<%@ page import="model.Event" %>
-<%@ page import="model.Order" %>
-<%@ page import="model.Review" %>
+<%@ page import="model.*" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%
     Utente user = (Utente) session.getAttribute("user");
     List<Event> events = (List<Event>) request.getAttribute("events");
     List<Review> reviews = (List<Review>) request.getAttribute("reviews");
+    Map<Integer, List<Ticket>> eventTicketsMap = (Map<Integer, List<Ticket>>) request.getAttribute("eventTicketsMap");
 %>
 <!DOCTYPE html>
 <html>
@@ -53,11 +52,16 @@
                                     <input type="hidden" name="eventId" value="<%= event.getCodiceEvento() %>">
                                     <button type="submit" class="button">Visualizza Evento</button>
                                 </form>
-                                <form action="cart" method="get">
-                                    <input type="hidden" name="action" value="add">
-                                    <input type="hidden" name="ticketId" value="<%= event.getCodiceEvento() %>">
-                                    <button type="submit" class="button">Aggiungi al Carrello</button>
-                                </form>
+                                <% List<Ticket> tickets = eventTicketsMap.get(event.getCodiceEvento()); %>
+                                <% if (tickets != null) { %>
+                                    <% for (Ticket ticket : tickets) { %>
+                                        <form action="cart" method="get">
+                                            <input type="hidden" name="actionC" value="add">
+                                            <input type="hidden" name="ticketId" value="<%= ticket.getCodiceBiglietto() %>">
+                                            <button type="submit" class="button">Aggiungi al Carrello (Tipo: <%= ticket.getTipo() %> Prezzo: <%= ticket.getPrezzoUnitario() %>)</button>
+                                        </form>
+                                    <% } %>
+                                <% } %>
                             </div>
                         </div>
                     <% } %>
@@ -98,4 +102,3 @@
     </div>
 </body>
 </html>
-

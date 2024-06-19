@@ -1,44 +1,51 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-    
-<%@ page import="model.Utente" %>
-<%@ page import="model.Ruolo" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="model.Order" %>
-<%@ page import="model.OrderDAO" %>
 <%@ page import="java.util.List" %>
 <%
-    Utente user = (Utente) session.getAttribute("user");
-    if (user == null || !user.getRuolo().equals(Ruolo.ADMIN)) {
-        response.sendRedirect("login");
-        return;
-    }
-
-    OrderDAO orderDAO = new OrderDAO();
-    List<Order> orders = orderDAO.getAllOrders();
+    List<Order> orders = (List<Order>) request.getAttribute("orders");
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Gestisci Ordini</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <jsp:include page="/header.jsp" />
-    <main>
+    <div class="table-container">
         <h1>Gestisci Ordini</h1>
-        <ul>
+        <table>
+            <tr>
+                <th>Codice Ordine</th>
+                <th>Email Cliente</th>
+                <th>Data Acquisto</th>
+                <th>Totale</th>
+                <th>Stato</th>
+                <th>Azioni</th>
+            </tr>
             <% for (Order order : orders) { %>
-                <li>
-                    <p>Ordine: <%= order.getCodiceOrdine() %></p>
-                    <p>Cliente: <%= order.getEmailCliente() %></p>
-                    <p>Data: <%= order.getDataAcquisto() %></p>
-                    <p>Prezzo totale: <%= order.getPrezzoTotale() %></p>
-                </li>
+                <tr>
+                    <td><%= order.getCodiceOrdine() %></td>
+                    <td><%= order.getEmailCliente() %></td>
+                    <td><%= order.getDataAcquisto() %></td>
+                    <td>€<%= order.getPrezzoTotale() %></td>
+                    <td><%= order.getStato().getStato() %></td>
+                    <td>
+                        <form action="manageOrders" method="post">
+                            <input type="hidden" name="orderId" value="<%= order.getCodiceOrdine() %>">
+                            <select name="stato" required>
+                                <option value="In lavorazione" <%= "In lavorazione".equals(order.getStato().getStato()) ? "selected" : "" %>>In lavorazione</option>
+                                <option value="Completato" <%= "Completato".equals(order.getStato().getStato()) ? "selected" : "" %>>Completato</option>
+                                <option value="Richiesto Rimborso" <%= "Richiesto Rimborso".equals(order.getStato().getStato()) ? "selected" : "" %>>Richiesto Rimborso</option>
+                            </select>
+                            <button type="submit" class="button">Aggiorna</button>
+                        </form>
+                    </td>
+                </tr>
             <% } %>
-        </ul>
-    </main>
+        </table>
+    </div>
     <jsp:include page="/footer.jsp" />
 </body>
 </html>

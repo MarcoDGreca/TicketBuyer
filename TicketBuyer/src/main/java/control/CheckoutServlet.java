@@ -3,6 +3,7 @@ package control;
 import model.Cart;
 import model.Order;
 import model.OrderDAO;
+import model.OrderDetailDAO;
 import model.Stato;
 import model.Ticket;
 
@@ -20,10 +21,12 @@ import java.util.List;
 public class CheckoutServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private OrderDAO orderDAO;
+    private OrderDetailDAO orderDetailDAO;
 
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
+        orderDetailDAO = new OrderDetailDAO();
     }
 
     @Override
@@ -59,7 +62,7 @@ public class CheckoutServlet extends HttpServlet {
 
                 for (Ticket ticket : cart.getItems().keySet()) {
                     int quantity = cart.getItems().get(ticket);
-                    orderDAO.addOrderDetail(orderId, ticket.getCodiceBiglietto(), quantity);
+                    orderDetailDAO.addOrderDetail(orderId, ticket.getCodiceBiglietto(), quantity);
                 }
 
                 cart.clear();

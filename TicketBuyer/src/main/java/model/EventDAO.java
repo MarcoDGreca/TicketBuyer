@@ -13,16 +13,38 @@ public class EventDAO {
         this.dataSource = DataSource.getInstance();
     }
 
-    public synchronized void addEvent(Event event) {
-        String query = "INSERT INTO Evento (nome, luogo, dataEvento, orario, disponibilita) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, event.getNome());
-            statement.setString(2, event.getLuogo());
-            statement.setDate(3, new java.sql.Date(event.getDataEvento().getTime()));
-            statement.setString(4, event.getOrario());
-            statement.setInt(5, event.getDisponibilita());
-            statement.executeUpdate();
+    public int addEvent(Event event) {
+        String sql = "INSERT INTO Evento (codiceEvento, nome, luogo, dataEvento, orario, tipo, disponibilita, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+        	ps.setInt(1, event.getCodiceEvento());
+            ps.setString(2, event.getNome());
+            ps.setString(3, event.getLuogo());
+            ps.setDate(4, new java.sql.Date(event.getDataEvento().getTime()));
+            ps.setString(5, event.getOrario());
+            ps.setString(6, event.getTipo());
+            ps.setInt(7, event.getDisponibilita());
+            ps.setString(8, event.getImage());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return event.getCodiceEvento();	
+    }
+
+    public void updateEvent(Event event) {
+        String sql = "UPDATE Evento SET nome = ?, luogo = ?, dataEvento = ?, orario = ?, tipo = ?, disponibilita = ?, image = ? WHERE codiceEvento = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, event.getNome());
+            ps.setString(2, event.getLuogo());
+            ps.setDate(3, new java.sql.Date(event.getDataEvento().getTime()));
+            ps.setString(4, event.getOrario());
+            ps.setString(5, event.getTipo());
+            ps.setInt(6, event.getDisponibilita());
+            ps.setString(7, event.getImage());
+            ps.setInt(8, event.getCodiceEvento());
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -104,28 +126,13 @@ public class EventDAO {
         return events;
     }
 
-    public synchronized void updateEvent(Event event) {
-        String query = "UPDATE Evento SET nome = ?, luogo = ?, dataEvento = ?, orario = ?, disponibilita = ? WHERE codiceEvento = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, event.getNome());
-            statement.setString(2, event.getLuogo());
-            statement.setDate(3, new java.sql.Date(event.getDataEvento().getTime()));
-            statement.setString(4, event.getOrario());
-            statement.setInt(5, event.getDisponibilita());
-            statement.setInt(6, event.getCodiceEvento());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public synchronized void deleteEvent(int eventId) {
-        String query = "DELETE FROM Evento WHERE codiceEvento = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, eventId);
-            statement.executeUpdate();
+  
+    public void deleteEvent(int id) {
+        String sql = "DELETE FROM Evento WHERE codiceEvento = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
