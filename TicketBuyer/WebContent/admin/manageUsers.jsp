@@ -38,7 +38,7 @@
                         <form action="manageUsers" method="post" style="display:inline;">
                             <input type="hidden" name="email" value="<%= user.getEmail() %>">
                             <input type="hidden" name="action" value="promote">
-                            <button type="submit" class="button">Promuovi a Admin</button>
+                            <button type="submit" class="button">Promuovi ad Admin</button>
                         </form>
                     </td>
                 </tr>

@@ -1,53 +1,50 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="model.Cart, model.Ticket" %>
-<%@ page import="java.util.Map" %>
-<%
-    Cart cart = (Cart) session.getAttribute("cart");
-    boolean isAuthenticated = (session.getAttribute("user") != null);
-%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" import="model.*" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="ISO-8859-1">
     <title>Checkout</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
+    <link href="${pageContext.request.contextPath}/styles/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div id="page">
-        <jsp:include page="header.jsp" />
+    <jsp:include page="header.jsp" />
+
+    <div id="main" class="clear">
         <section class="checkout-section">
             <h2>Riepilogo Ordine</h2>
-            <% if (cart != null && !cart.getItems().isEmpty()) { %>
-                <div class="cart-summary">
-                    <ul class="cart-list">
-                        <% for (Map.Entry<Ticket, Integer> entry : cart.getItems().entrySet()) { %>
-                            <li class="cart-item">
-                                <div>
-                                    <p><strong>Nome Prodotto:</strong> <%= entry.getKey().getDescrizione() %></p>
-                                    <p><strong>Prezzo Unitario:</strong> &euro;<%= entry.getKey().getPrezzoUnitario() %></p>
-                                    <p><strong>Quantit&agrave;:</strong> <%= entry.getValue() %></p>
-                                    <p><strong>Totale Prodotto:</strong> &euro;<%= entry.getKey().getPrezzoUnitario() * entry.getValue() %></p>
-                                </div>
-                            </li>
-                        <% } %>
-                    </ul>
-                    <div class="cart-total">
-                        <p><strong>Totale Ordine:</strong> &euro;<%= cart.getTotalPrice() %></p>
-                    </div>
-                    <% if (isAuthenticated) { %>
-                        <form action="checkout" method="post">
-                            <button type="submit">Conferma Ordine</button>
-                        </form>
-                    <% } else { %>
-                        <p>Per procedere al pagamento, <a href="login.jsp">effettua il login</a> o <a href="register.jsp">registrati</a>.</p>
-                    <% } %>
-                </div>
-            <% } else { %>
-                <p>Il carrello è vuoto.</p>
-            <% } %>
+            <table class="checkout-table">
+                <tr>
+                    <th>Immagine</th>
+                    <th>Descrizione</th>
+                    <th>Quantità</th>
+                    <th>Prezzo totale</th>
+                </tr>
+                <% Cart cart = (Cart) session.getAttribute("cart");
+                   if (cart != null && !cart.isEmpty()) {
+                       for (CartItem item : cart.getItems()) {
+                           Ticket ticket = item.getTicket();
+                %>
+                <tr>
+                    <td><img src="img/ticket<%=ticket.getCodiceBiglietto()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
+                    <td><%=ticket.getDescrizione()%></td>
+                    <td><%=item.getQuantity()%></td>
+                    <td>&euro;<%=String.format("%.2f", item.getTotalPrice())%></td>
+                </tr>
+                <%     }
+                   } %>
+            </table>
+            <div class="checkout-total">
+                Totale ordine: &euro;<%=String.format("%.2f", cart.getTotalPrice())%>
+            </div>
+            <form action="checkout" method="post">
+                <button type="submit" class="button">Conferma Acquisto</button>
+            </form>
+            <form action="cart.jsp" method="get">
+                <button type="submit" class="button">Modifica Carrello</button>
+            </form>
         </section>
-        <jsp:include page="footer.jsp" />
     </div>
+
+    <jsp:include page="footer.jsp" />
 </body>
 </html>
-

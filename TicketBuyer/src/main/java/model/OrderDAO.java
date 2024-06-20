@@ -84,6 +84,18 @@ public class OrderDAO {
         }
         return orders;
     }
+    
+    public void updateStatoOrder(Order order) {
+        String sql = "UPDATE Ordine SET stato = ? WHERE codiceOrdine = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, order.getStato().name().replace("_", " "));
+            ps.setInt(2, order.getCodiceOrdine());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public synchronized void updateOrder(Order order) {
         String query = "UPDATE Ordine SET emailCliente = ?, prezzoTotale = ?, dataAcquisto = ?, stato = ? WHERE codiceOrdine = ?";

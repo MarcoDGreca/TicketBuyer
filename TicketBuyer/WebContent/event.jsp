@@ -28,10 +28,11 @@
                 <div class="ticket">
                     <p><strong>Tipo:</strong> <%= ticket.getTipo() %></p>
                     <p><strong>Prezzo:</strong> <%= ticket.getPrezzoUnitario() %> €</p>
-                    <form action="cart" method="get">
-                        <input type="hidden" name="actionC" value="add">
-                        <input type="hidden" name="ticketId" value="<%= ticket.getCodiceBiglietto() %>">
-                        <button type="submit" class="button">Aggiungi al Carrello</button>
+                    <form action="cart" method="post">
+                       <input type="hidden" name="action" value="add">
+                       <input type="hidden" name="ticketId" value="<%= ticket.getCodiceBiglietto() %>">
+                       <input type="hidden" name="qnt" value="1">
+                       <button type="submit" class="button">Aggiungi al Carrello (Tipo: <%= ticket.getTipo() %> Prezzo: <%= ticket.getPrezzoUnitario() %>)</button>
                     </form>
                 </div>
             <% } %>

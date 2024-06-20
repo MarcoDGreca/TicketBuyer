@@ -4,7 +4,6 @@ import model.Cart;
 import model.Ticket;
 import model.TicketDAO;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,65 +31,29 @@ public class CartServlet extends HttpServlet {
             session.setAttribute("cart", cart);
         }
 
-        String action = request.getParameter("actionC");
+        String action = request.getParameter("action");
         if (action != null) {
-            switch (action) {
-                case "add":
-                    addToCart(request, response, cart);
-                    break;
-                case "remove":
-                    removeFromCart(request, response, cart);
-                    break;
-                case "update":
-                    updateCart(request, response, cart);
-                    break;
-                default:
-                    viewCart(request, response, cart);
-                    break;
-            }
-        } else {
-            viewCart(request, response, cart);
-        }
-    }
+            int ticketId = Integer.parseInt(request.getParameter("ticketId"));
+			Ticket ticket = ticketDAO.getTicketById(ticketId);
 
-    private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
-        int ticketId = Integer.parseInt(request.getParameter("ticketId"));
-        Ticket ticket = ticketDAO.getTicketById(ticketId);
-        System.out.println(ticketId);
-        if (ticket != null) {
-            cart.addItem(ticket);
+			switch (action) {
+			    case "add":
+			        cart.addTicket(ticket);
+			        break;
+			    case "remove":
+			        cart.removeTicket(ticket);
+			        break;
+			    case "update":
+			        int quantity = Integer.parseInt(request.getParameter("quantity"));
+			        cart.updateQuantity(ticket, quantity);
+			        break;
+			    case "clear":
+			        cart.clear();
+			        break;
+			}
         }
-        HttpSession session = request.getSession();
-        session.setAttribute("cart", cart);
-        request.getRequestDispatcher("/cart.jsp").forward(request, response);
-    }
 
-    private void removeFromCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
-        int ticketId = Integer.parseInt(request.getParameter("ticketId"));
-        Ticket ticket = ticketDAO.getTicketById(ticketId);
-        if (ticket != null) {
-            cart.removeItem(ticket);
-        }
-        HttpSession session = request.getSession();
-        session.setAttribute("cart", cart);
-        request.getRequestDispatcher("/cart.jsp").forward(request, response);
-    }
-
-    private void updateCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
-        int ticketId = Integer.parseInt(request.getParameter("ticketId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        Ticket ticket = ticketDAO.getTicketById(ticketId);
-        if (ticket != null) {
-            cart.updateItem(ticket, quantity);
-        }
-        HttpSession session = request.getSession();
-        session.setAttribute("cart", cart);
-        request.getRequestDispatcher("/cart.jsp").forward(request, response);
-    }
-
-    private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
-        request.setAttribute("cart", cart);
-        request.getRequestDispatcher("/cart.jsp").forward(request, response);
+        response.sendRedirect("cart.jsp");
     }
 
     @Override
@@ -98,4 +61,3 @@ public class CartServlet extends HttpServlet {
         doGet(request, response);
     }
 }
-

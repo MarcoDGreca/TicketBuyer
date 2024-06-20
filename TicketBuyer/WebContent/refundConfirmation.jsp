@@ -13,7 +13,7 @@
         <section class="confirmation-section">
             <h2>Richiesta di Rimborso Ricevuta</h2>
             <p>La tua richiesta di rimborso è stata ricevuta e sarà elaborata a breve. Ti contatteremo via email per ulteriori dettagli.</p>
-            <a href="home.jsp" class="button">Torna alla Home</a>
+            <a href="home" class="button">Torna alla Home</a>
         </section>
         <jsp:include page="footer.jsp" />
     </div>

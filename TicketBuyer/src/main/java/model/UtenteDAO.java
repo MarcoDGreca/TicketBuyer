@@ -138,4 +138,15 @@ public class UtenteDAO {
         }
         return null;
     }
+    
+    public void promoteToAdmin(String email) {
+        String sql = "UPDATE Utente SET ruolo = 'Admin' WHERE email = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

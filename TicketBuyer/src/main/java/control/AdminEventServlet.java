@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/manageEvents")
+@WebServlet("/manageEvents")
 public class AdminEventServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private EventDAO eventDAO;
@@ -35,7 +35,7 @@ public class AdminEventServlet extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("eventID"));
             eventDAO.deleteEvent(id);
         }
-        response.sendRedirect(request.getContextPath() + "/admin/manageEvents");
+        response.sendRedirect(request.getContextPath() + "/manageEvents");
     }
 }
 

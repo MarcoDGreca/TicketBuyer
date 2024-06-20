@@ -1,11 +1,13 @@
 package control;
 
 import model.Cart;
+import model.CartItem;
 import model.Order;
 import model.OrderDAO;
 import model.OrderDetailDAO;
 import model.Stato;
 import model.Ticket;
+import model.Utente;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
@@ -48,11 +49,11 @@ public class CheckoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
-        String emailCliente = ((model.Utente) session.getAttribute("user")).getEmail();
+        Utente user = (Utente) session.getAttribute("user");
 
-        if (cart != null && !cart.isEmpty()) {
+        if (cart != null && !cart.isEmpty() && user != null) {
             Order order = new Order();
-            order.setEmailCliente(emailCliente);
+            order.setEmailCliente(user.getEmail());
             order.setPrezzoTotale(cart.getTotalPrice());
             order.setDataAcquisto(new java.sql.Date(System.currentTimeMillis()));
             order.setStato(Stato.IN_LAVORAZIONE);
@@ -60,8 +61,9 @@ public class CheckoutServlet extends HttpServlet {
             try {
                 int orderId = orderDAO.addOrder(order);
 
-                for (Ticket ticket : cart.getItems().keySet()) {
-                    int quantity = cart.getItems().get(ticket);
+                for (CartItem item : cart.getItems()) {
+                    Ticket ticket = item.getTicket();
+                    int quantity = item.getQuantity();
                     orderDetailDAO.addOrderDetail(orderId, ticket.getCodiceBiglietto(), quantity);
                 }
 
@@ -72,7 +74,7 @@ public class CheckoutServlet extends HttpServlet {
                 throw new ServletException("Errore nella creazione dell'ordine", e);
             }
         } else {
-            request.setAttribute("errorMessage", "Il carrello è vuoto.");
+            request.setAttribute("errorMessage", "Il carrello è vuoto o l'utente non è autenticato.");
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
         }
     }

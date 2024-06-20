@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="java.util.*, model.*" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" import="java.util.*, model.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,26 +26,24 @@
                     <th>Rimuovi</th>
                 </tr>
                 <% 
-                    Map<Ticket, Integer> items = cart.getItems();    
-                    for(Map.Entry<Ticket, Integer> entry: items.entrySet()){
-                        Ticket ticket = entry.getKey();
-                        int quantity = entry.getValue();
+                    for(CartItem item: cart.getItems()){
+                        Ticket ticket = item.getTicket();
                 %>
                 <tr>
                     <td><img src="img/ticket<%=ticket.getCodiceBiglietto()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
                     <td><%=ticket.getDescrizione()%></td>
                     <td> 
                         <form action="cart" method="get">
-                            <input type="hidden" name="actionC" value="update">
+                            <input type="hidden" name="action" value="update">
                             <input type="hidden" name="ticketId" value="<%=ticket.getCodiceBiglietto()%>">
-                            <input type="number" name="quantity" value="<%=quantity%>" min="1">
+                            <input type="number" name="quantity" value="<%=item.getQuantity()%>" min="1">
                             <button type="submit">Aggiorna</button>
                         </form>
                     </td>
-                    <td>&euro;<%=String.format("%.2f", ticket.getPrezzoUnitario() * quantity)%></td>
+                    <td>&euro;<%=String.format("%.2f", item.getTotalPrice())%></td>
                     <td>
                         <form action="cart" method="get">
-                            <input type="hidden" name="actionC" value="remove">
+                            <input type="hidden" name="action" value="remove">
                             <input type="hidden" name="ticketId" value="<%=ticket.getCodiceBiglietto()%>">
                             <button type="submit" class="remove-button">Rimuovi</button>
                         </form>
@@ -63,6 +60,14 @@
                         href="checkout" <%} else { %>href="login.jsp?action=checkout" <%} %>>
                     <button>Acquista</button>
                 </a>
+            </div>
+
+            <div class="cart-clear">
+                <form action="cart" method="get">
+                    <input type="hidden" name="action" value="clear">
+                    <input type="hidden" name="ticketId" value="0">
+                    <button type="submit" class="clear-button">Svuota Carrello</button>
+                </form>
             </div>
         </section>
 

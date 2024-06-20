@@ -25,7 +25,7 @@ public class AdminUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Utente> users = userDAO.getAllUsers();
         request.setAttribute("users", users);
-        request.getRequestDispatcher("/manageUsers.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/manageUsers.jsp").forward(request, response);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class AdminUserServlet extends HttpServlet {
         if ("delete".equals(action)) {
         	userDAO.deleteUser(email);
         } else if ("promote".equals(action)) {
-        	//userDAO.promoteUserToAdmin(email);
+        	userDAO.promoteToAdmin(email);
         }
         response.sendRedirect("manageUsers");
     }

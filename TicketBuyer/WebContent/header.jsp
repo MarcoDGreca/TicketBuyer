@@ -35,7 +35,7 @@
             <li><a href="${pageContext.request.contextPath}/search.jsp">Cerca</a></li>
             <li><a href="${pageContext.request.contextPath}/cart.jsp">Carrello</a></li>
             <% if (user != null && user.getRuolo().equals(Ruolo.ADMIN)) { %>
-                <li><a href="${pageContext.request.contextPath}/admin/manageEvents">Gestisci Eventi</a></li>
+                <li><a href="${pageContext.request.contextPath}/manageEvents">Gestisci Eventi</a></li>
                 <li><a href="${pageContext.request.contextPath}/manageUsers">Gestisci Utenti</a></li>
                 <li><a href="${pageContext.request.contextPath}/manageOrders">Gestisci Ordini</a></li>
             <% } %>
