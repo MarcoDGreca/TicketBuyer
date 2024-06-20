@@ -14,7 +14,7 @@ public class EventDAO {
     }
 
     public int addEvent(Event event) {
-        String sql = "INSERT INTO Evento (codiceEvento, nome, luogo, dataEvento, orario, tipo, disponibilita, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Evento (codiceEvento, nome, luogo, dataEvento, orario, tipo, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DataSource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
         	ps.setInt(1, event.getCodiceEvento());
@@ -23,7 +23,6 @@ public class EventDAO {
             ps.setDate(4, new java.sql.Date(event.getDataEvento().getTime()));
             ps.setString(5, event.getOrario());
             ps.setString(6, event.getTipo());
-            ps.setInt(7, event.getDisponibilita());
             ps.setString(8, event.getImage());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -33,7 +32,7 @@ public class EventDAO {
     }
 
     public void updateEvent(Event event) {
-        String sql = "UPDATE Evento SET nome = ?, luogo = ?, dataEvento = ?, orario = ?, tipo = ?, disponibilita = ?, image = ? WHERE codiceEvento = ?";
+        String sql = "UPDATE Evento SET nome = ?, luogo = ?, dataEvento = ?, orario = ?, tipo = ?, image = ? WHERE codiceEvento = ?";
         try (Connection conn = DataSource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, event.getNome());
@@ -41,7 +40,6 @@ public class EventDAO {
             ps.setDate(3, new java.sql.Date(event.getDataEvento().getTime()));
             ps.setString(4, event.getOrario());
             ps.setString(5, event.getTipo());
-            ps.setInt(6, event.getDisponibilita());
             ps.setString(7, event.getImage());
             ps.setInt(8, event.getCodiceEvento());
             ps.executeUpdate();
@@ -63,8 +61,7 @@ public class EventDAO {
                         resultSet.getString("luogo"),
                         resultSet.getDate("dataEvento"),
                         resultSet.getString("orario"),
-                        TipoEvento.fromString(resultSet.getString("tipo")),
-                        resultSet.getInt("disponibilita")
+                        TipoEvento.fromString(resultSet.getString("tipo"))
                     );
                 }
             }
@@ -88,8 +85,7 @@ public class EventDAO {
                             resultSet.getString("luogo"),
                             resultSet.getDate("dataEvento"),
                             resultSet.getString("orario"),
-                            TipoEvento.fromString(resultSet.getString("tipo")),
-                            resultSet.getInt("disponibilita")
+                            TipoEvento.fromString(resultSet.getString("tipo"))
                     ));
                 }
                 if(list.isEmpty())
@@ -115,8 +111,7 @@ public class EventDAO {
                         resultSet.getString("luogo"),
                         resultSet.getDate("dataEvento"),
                         resultSet.getString("orario"),
-                        TipoEvento.fromString(resultSet.getString("tipo")),
-                        resultSet.getInt("disponibilita")
+                        TipoEvento.fromString(resultSet.getString("tipo"))
                 );
                 events.add(event);
             }
@@ -138,6 +133,20 @@ public class EventDAO {
         }
     }
     
+    public String getImage(int eventId) throws SQLException {
+        String sql = "SELECT image FROM Evento WHERE codiceEvento = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("image");
+                }
+            }
+        }
+        return null;
+    }
+    
     public List<Event> searchEvents(String nome, String tipo, Date dataInizio, Date dataFine, Integer disponibilita, Double prezzoMax) {
         List<Event> events = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT DISTINCT e.* FROM Evento e JOIN Biglietto b ON e.codiceEvento = b.codiceEvento WHERE 1=1");
@@ -153,12 +162,6 @@ public class EventDAO {
         }
         if (dataFine != null) {
             sql.append(" AND e.dataEvento <= ?");
-        }
-        if (disponibilita != null) {
-            sql.append(" AND e.disponibilita >= ?");
-        }
-        if (prezzoMax != null) {
-            sql.append(" AND b.prezzoUnitario <= ?");
         }
 
         try (Connection conn = DataSource.getInstance().getConnection();
@@ -176,9 +179,6 @@ public class EventDAO {
             if (dataFine != null) {
                 ps.setDate(paramIndex++, dataFine);
             }
-            if (disponibilita != null) {
-                ps.setInt(paramIndex++, disponibilita);
-            }
             if (prezzoMax != null) {
                 ps.setDouble(paramIndex++, prezzoMax);
             }
@@ -192,7 +192,6 @@ public class EventDAO {
                     event.setLuogo(rs.getString("luogo"));
                     event.setDataEvento(rs.getDate("dataEvento"));
                     event.setTipo(TipoEvento.fromString(rs.getString("tipo")));
-                    event.setDisponibilita(rs.getInt("disponibilita"));
                     events.add(event);
                 }
             }
@@ -202,6 +201,18 @@ public class EventDAO {
         return events;
     }
 
-   
+	public int getID(Event newEvent) throws SQLException {
+		String nomeE = newEvent.getNome();
+		String sql = "SELECT codiceEvento FROM Evento WHERE nome = ?";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nomeE);
+            ResultSet rs = ps.executeQuery();  
+        if (rs.next()) {
+            return rs.getInt("codiceEvento");
+        	}
+        }
+		return 0;
+	}
 }
 

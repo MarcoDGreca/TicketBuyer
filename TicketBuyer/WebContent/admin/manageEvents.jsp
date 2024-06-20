@@ -9,6 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestione Eventi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
@@ -37,10 +38,9 @@
                             <td><%= event.getDataEvento() %></td>
                             <td><%= event.getOrario() %></td>
                             <td><%= event.getTipo() %></td>
-                            <td><%= event.getDisponibilita() %></td>
                             <td>
                                 <a href="${pageContext.request.contextPath}/admin/updateEvent?id=<%= event.getCodiceEvento() %>" class="button">Modifica</a>
-                                <form action="${pageContext.request.contextPath}/admin/manageEvents?action=delete" method="post" style="display:inline;">
+                                <form action="${pageContext.request.contextPath}/manageEvents?action=delete" method="post" style="display:inline;">
                                     <input type="hidden" name="eventID" value="<%= event.getCodiceEvento() %>">
                                     <button type="submit" class="button">Elimina</button>
                                 </form>

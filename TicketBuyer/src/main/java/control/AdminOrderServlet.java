@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 @WebServlet("/manageOrders")
@@ -24,9 +25,22 @@ public class AdminOrderServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Order> orders = orderDAO.getAllOrders();
-        request.setAttribute("orders", orders);
-        request.getRequestDispatcher("/admin/manageOrders.jsp").forward(request, response);
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "list";
+        }
+
+        switch (action) {
+            case "list":
+                listOrders(request, response);
+                break;
+            case "filter":
+                filterOrders(request, response);
+                break;
+            default:
+                listOrders(request, response);
+                break;
+        }
     }
 
     @Override
@@ -45,6 +59,25 @@ public class AdminOrderServlet extends HttpServlet {
             }
         }
         doGet(request, response);
+    }
+
+    private void listOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Order> orders = orderDAO.getAllOrders();
+        request.setAttribute("orders", orders);
+        request.getRequestDispatcher("/admin/manageOrders.jsp").forward(request, response);
+    }
+
+    private void filterOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String emailCliente = request.getParameter("emailCliente");
+        String dataInizioStr = request.getParameter("dataInizio");
+        String dataFineStr = request.getParameter("dataFine");
+
+        Date dataInizio = dataInizioStr != null && !dataInizioStr.isEmpty() ? Date.valueOf(dataInizioStr) : null;
+        Date dataFine = dataFineStr != null && !dataFineStr.isEmpty() ? Date.valueOf(dataFineStr) : null;
+
+        List<Order> orders = orderDAO.filterOrders(emailCliente, dataInizio, dataFine);
+        request.setAttribute("orders", orders);
+        request.getRequestDispatcher("/admin/manageOrders.jsp").forward(request, response);
     }
 
     private void updateOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {

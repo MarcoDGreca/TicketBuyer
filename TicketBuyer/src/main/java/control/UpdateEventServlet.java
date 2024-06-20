@@ -50,10 +50,13 @@ public class UpdateEventServlet extends HttpServlet {
         Date dataEvento = Date.valueOf(request.getParameter("dataEvento"));
         String orario = request.getParameter("orario");
         String tipo = request.getParameter("tipo");
-        int disponibilita = Integer.parseInt(request.getParameter("disponibilita"));
-
-        String fileName = uploadImage(request);
-
+        String fileName;
+        
+        if (request.getPart("image") != null) {
+        fileName = uploadImage(request);
+        }
+        else fileName = null;
+        
         Event updatedEvent = new Event();
         updatedEvent.setCodiceEvento(id);
         updatedEvent.setNome(nome);
@@ -61,14 +64,31 @@ public class UpdateEventServlet extends HttpServlet {
         updatedEvent.setDataEvento(dataEvento);
         updatedEvent.setOrario(orario);
         updatedEvent.setTipo(TipoEvento.fromString(tipo));
-        updatedEvent.setDisponibilita(disponibilita);
         if (fileName != null) {
             updatedEvent.setImage(fileName);
         }
+        else {
+        	updatedEvent.setImage(eventDAO.getEventById(id).getImage());
+        }
 
         eventDAO.updateEvent(updatedEvent);
+        
+        double prezzoStandard = Double.parseDouble(request.getParameter("prezzoStandard"));
+        double prezzoVIP = Double.parseDouble(request.getParameter("prezzoVIP"));
+        
+        double prezzi[] = {prezzoStandard,prezzoVIP};
+        String[] tipiBiglietto = {"Standard", "VIP"};
 
-        response.sendRedirect("manageEvents");
+        for (int i = 0; i < tipiBiglietto.length; i++) {
+            Ticket ticket = new Ticket();
+            ticket.setCodiceEvento(id);
+            ticket.setTipo(tipiBiglietto[i]);
+            ticket.setDescrizione("Biglietto " + tipiBiglietto[i] + " per l'evento " + id);
+            ticket.setPrezzoUnitario(prezzi[i]);
+            ticketDAO.updateTicketByEventID(ticket, tipiBiglietto[i]);
+        }
+
+        response.sendRedirect("../manageEvents");
     }
 
     private String uploadImage(HttpServletRequest request) throws IOException, ServletException {
@@ -81,6 +101,7 @@ public class UpdateEventServlet extends HttpServlet {
                 uploadDirFile.mkdirs();
             }
             filePart.write(uploadDir + File.separator + fileName);
+            System.out.println("Ho caricato");
             return fileName;
         }
         return null;

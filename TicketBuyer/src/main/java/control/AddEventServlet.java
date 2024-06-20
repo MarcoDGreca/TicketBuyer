@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.sql.SQLException;
 
 @WebServlet("/admin/addEvent")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -45,7 +46,6 @@ public class AddEventServlet extends HttpServlet {
         Date dataEvento = Date.valueOf(request.getParameter("dataEvento"));
         String orario = request.getParameter("orario");
         String tipo = request.getParameter("tipo");
-        int disponibilita = Integer.parseInt(request.getParameter("disponibilita"));
 
         String fileName = uploadImage(request);
 
@@ -55,25 +55,33 @@ public class AddEventServlet extends HttpServlet {
         newEvent.setDataEvento(dataEvento);
         newEvent.setOrario(orario);
         newEvent.setTipo(TipoEvento.fromString(tipo));
-        newEvent.setDisponibilita(disponibilita);
         newEvent.setImage(fileName);
 
-        int eventId = eventDAO.addEvent(newEvent);
+        eventDAO.addEvent(newEvent);
         System.out.println("Lol.");
-
+        
+        int eventID = 0;
+		try {
+			eventID = eventDAO.getID(newEvent);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
         String[] tipiBiglietto = {"Standard", "VIP"};
-        double[] prezzi = {50.0, 100.0};
+        double prezzoStandard = Double.parseDouble(request.getParameter("prezzoStandard"));
+        double prezzoVIP = Double.parseDouble(request.getParameter("prezzoVIP"));
+        
+        double prezzi[] = {prezzoStandard,prezzoVIP};
 
         for (int i = 0; i < tipiBiglietto.length; i++) {
             Ticket ticket = new Ticket();
-            ticket.setCodiceEvento(eventId);
+            ticket.setCodiceEvento(eventID);
             ticket.setTipo(tipiBiglietto[i]);
-            ticket.setDescrizione("Biglietto " + tipiBiglietto[i] + " per l'evento " + eventId);
+            ticket.setDescrizione("Biglietto " + tipiBiglietto[i] + " per l'evento " + newEvent.getNome());
             ticket.setPrezzoUnitario(prezzi[i]);
             ticketDAO.addTicket(ticket);
         }
 
-        response.sendRedirect("manageEvents");
+        response.sendRedirect("../manageEvents");
     }
 
     private String uploadImage(HttpServletRequest request) throws IOException, ServletException {
@@ -85,6 +93,8 @@ public class AddEventServlet extends HttpServlet {
             if (!uploadDirFile.exists()) {
                 uploadDirFile.mkdirs();
             }
+            
+            System.out.println("Ho caricato");
             filePart.write(uploadDir + File.separator + fileName);
             return fileName;
         }

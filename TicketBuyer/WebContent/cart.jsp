@@ -4,6 +4,7 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>Carrello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="${pageContext.request.contextPath}/styles/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -21,7 +22,7 @@
                 <tr>
                     <th>Immagine</th>
                     <th>Descrizione</th>
-                    <th>Quantità</th>
+                    <th>Quantit&agrave;</th>
                     <th>Prezzo totale</th>
                     <th>Rimuovi</th>
                 </tr>
@@ -30,7 +31,7 @@
                         Ticket ticket = item.getTicket();
                 %>
                 <tr>
-                    <td><img src="img/ticket<%=ticket.getCodiceBiglietto()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
+                    <td><img src="img/<%=item.getCodiceEventoBiglietto()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
                     <td><%=ticket.getDescrizione()%></td>
                     <td> 
                         <form action="cart" method="get">

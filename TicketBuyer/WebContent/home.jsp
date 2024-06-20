@@ -2,11 +2,13 @@
 <%@ page import="model.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="java.sql.SQLException" %>
 <%
     Utente user = (Utente) session.getAttribute("user");
     List<Event> events = (List<Event>) request.getAttribute("events");
     List<Review> reviews = (List<Review>) request.getAttribute("reviews");
     Map<Integer, List<Ticket>> eventTicketsMap = (Map<Integer, List<Ticket>>) request.getAttribute("eventTicketsMap");
+    EventDAO eventDAO = new EventDAO();
 %>
 <!DOCTYPE html>
 <html>
@@ -39,7 +41,15 @@
                     <% for (Event event : events) { %>
                         <div class="event grid-item">
                             <div class="event-image-container">
-                                <img src="${pageContext.request.contextPath}/img/<%= event.getCodiceEvento() %>.jpeg" alt="<%= event.getNome() %>">
+                                <%
+                                    String imagePath = "";
+                                    try {
+                                        imagePath = eventDAO.getImage(event.getCodiceEvento());
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                %>
+                                <img src="${pageContext.request.contextPath}/img/<%= imagePath != null ? imagePath : "default.jpg" %>" alt="<%= event.getNome() %>">
                             </div>
                             <div class="event-details">
                                 <h3><%= event.getNome() %></h3>
@@ -47,7 +57,6 @@
                                 <p><strong>Data:</strong> <%= event.getDataEvento() %></p>
                                 <p><strong>Orario:</strong> <%= event.getOrario() %></p>
                                 <p><strong>Tipo:</strong> <%= event.getTipo() %></p>
-                                <p><strong>Disponibilità:</strong> <%= event.getDisponibilita() %></p>
                                 <form action="event" method="get">
                                     <input type="hidden" name="eventId" value="<%= event.getCodiceEvento() %>">
                                     <button type="submit" class="button">Visualizza Evento</button>
@@ -103,3 +112,4 @@
     </div>
 </body>
 </html>
+

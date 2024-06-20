@@ -178,7 +178,6 @@ public class OrderDAO {
                     event.setLuogo(rs.getString("luogo"));
                     event.setDataEvento(rs.getDate("dataEvento"));
                     event.setTipo(TipoEvento.fromString(rs.getString("tipo")));
-                    event.setDisponibilita(rs.getInt("disponibilita"));
                     events.add(event);
                 }
             }
@@ -187,5 +186,34 @@ public class OrderDAO {
         }
         return events;
     }
+    
+    public List<Order> filterOrders(String emailCliente, Date dataInizio, Date dataFine) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM Ordine WHERE (emailCliente = ? OR ? IS NULL) AND (dataAcquisto >= ? OR ? IS NULL) AND (dataAcquisto <= ? OR ? IS NULL)";
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, emailCliente);
+            ps.setString(2, emailCliente);
+            ps.setDate(3, dataInizio);
+            ps.setDate(4, dataInizio);
+            ps.setDate(5, dataFine);
+            ps.setDate(6, dataFine);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                	 Order order = new Order();
+                     order.setCodiceOrdine(rs.getInt("codiceOrdine"));
+                     order.setEmailCliente(rs.getString("emailCliente"));
+                     order.setPrezzoTotale(rs.getDouble("prezzoTotale"));
+                     order.setDataAcquisto(rs.getDate("dataAcquisto"));
+                     order.setStato(Stato.fromString(rs.getString("stato")));
+                     orders.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
 }
 

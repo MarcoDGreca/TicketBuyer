@@ -11,6 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <title><%= event.getNome() %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
@@ -22,12 +23,11 @@
             <p><strong>Data:</strong> <%= event.getDataEvento() %></p>
             <p><strong>Orario:</strong> <%= event.getOrario() %></p>
             <p><strong>Tipo:</strong> <%= event.getTipo() %></p>
-            <p><strong>Disponibilità:</strong> <%= event.getDisponibilita() %></p>
             <h2>Biglietti Disponibili</h2>
             <% for (Ticket ticket : tickets) { %>
                 <div class="ticket">
                     <p><strong>Tipo:</strong> <%= ticket.getTipo() %></p>
-                    <p><strong>Prezzo:</strong> <%= ticket.getPrezzoUnitario() %> €</p>
+                    <p><strong>Prezzo:</strong> <%= ticket.getPrezzoUnitario() %> &euro;</p>
                     <form action="cart" method="post">
                        <input type="hidden" name="action" value="add">
                        <input type="hidden" name="ticketId" value="<%= ticket.getCodiceBiglietto() %>">

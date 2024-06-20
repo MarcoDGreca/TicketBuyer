@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Modifica Evento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
@@ -15,6 +16,7 @@
     <div class="form-container">
         <h1>Modifica Evento</h1>
         <form action="${pageContext.request.contextPath}/admin/updateEvent" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="update">
             <input type="hidden" name="id" value="<%= event.getCodiceEvento() %>">
             <div>
                 <label for="nome">Nome</label>
@@ -41,12 +43,16 @@
                 </select>
             </div>
             <div>
-                <label for="disponibilita">Disponibilità</label>
-                <input type="number" id="disponibilita" name="disponibilita" value="<%= event.getDisponibilita() %>" required>
+                <label for="Prezzo Standard">Prezzo Standard</label>
+                <input type="number" id="prezzoStandard" name="prezzoStandard" required>
+            </div>
+            <div>
+                <label for="Prezzo VIP">Prezzo VIP</label>
+                <input type="number" id="prezzoVIP" name="prezzoVIP" required>
             </div>
             <div>
                 <label for="image">Immagine</label>
-                <input type="file" id="image" name="image" accept="image/*">
+                <input type="file" id="image" name="image" accept="image/*"">
             </div>
             <button type="submit" class="button">Modifica</button>
         </form>

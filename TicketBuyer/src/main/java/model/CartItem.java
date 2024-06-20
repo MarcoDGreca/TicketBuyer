@@ -28,5 +28,9 @@ public class CartItem {
     public double getTotalPrice() {
         return ticket.getPrezzoUnitario() * quantity;
     }
+    
+    public int getCodiceEventoBiglietto() {
+        return ticket.getCodiceEvento();
+    }
 }
 

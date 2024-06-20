@@ -35,7 +35,7 @@ public class AdminEventServlet extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("eventID"));
             eventDAO.deleteEvent(id);
         }
-        response.sendRedirect(request.getContextPath() + "/manageEvents");
+        response.sendRedirect("manageEvents");
     }
 }
 

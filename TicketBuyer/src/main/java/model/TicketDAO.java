@@ -138,8 +138,8 @@ public class TicketDAO {
         }
     }
     
-    public void updateTicket(Ticket ticket) {
-        String sql = "UPDATE Biglietto SET tipo = ?, descrizione = ?, prezzoUnitario = ? WHERE codiceBiglietto = ?";
+    public void updateTicketByEventID(Ticket ticket, String tipoBiglietto) {
+        String sql = "UPDATE Biglietto SET tipo = ?, descrizione = ?, prezzoUnitario = ? WHERE codiceEvento = ? AND tipo = ?";
 
         try (Connection conn = DataSource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -147,7 +147,8 @@ public class TicketDAO {
             ps.setString(1, ticket.getTipo());
             ps.setString(2, ticket.getDescrizione());
             ps.setDouble(3, ticket.getPrezzoUnitario());
-            ps.setInt(4, ticket.getCodiceBiglietto());
+            ps.setInt(4, ticket.getCodiceEvento());
+            ps.setString(5, ticket.getTipo());
 
             ps.executeUpdate();
         } catch (SQLException e) {

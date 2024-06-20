@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Aggiungi Evento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
@@ -36,8 +37,12 @@
                 </select>
             </div>
             <div>
-                <label for="disponibilita">Disponibilità</label>
-                <input type="number" id="disponibilita" name="disponibilita" required>
+                <label for="Prezzo Standard">Prezzo Standard</label>
+                <input type="number" id="prezzoStandard" name="prezzoStandard" required>
+            </div>
+            <div>
+                <label for="Prezzo VIP">Prezzo VIP</label>
+                <input type="number" id="prezzoVIP" name="prezzoVIP" required>
             </div>
             <div>
                 <label for="image">Immagine</label>

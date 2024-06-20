@@ -34,10 +34,6 @@
                 <input type="date" id="dataFine" name="dataFine">
             </div>
             <div>
-                <label for="disponibilita">Disponibilità:</label>
-                <input type="number" id="disponibilita" name="disponibilita" min="1">
-            </div>
-            <div>
                 <label for="prezzoMax">Prezzo Massimo:</label>
                 <input type="number" id="prezzoMax" name="prezzoMax" step="0.01">
             </div>

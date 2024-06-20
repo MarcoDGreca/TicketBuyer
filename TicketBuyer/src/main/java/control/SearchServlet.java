@@ -55,7 +55,6 @@ public class SearchServlet extends HttpServlet {
                 jsonObject.put("dataEvento", event.getDataEvento().toString());
                 jsonObject.put("orario", event.getOrario());
                 jsonObject.put("tipo", event.getTipo());
-                jsonObject.put("disponibilita", event.getDisponibilita());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
