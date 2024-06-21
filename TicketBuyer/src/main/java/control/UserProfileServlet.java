@@ -2,6 +2,7 @@ package control;
 
 import model.Utente;
 import model.UtenteDAO;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +28,7 @@ public class UserProfileServlet extends HttpServlet {
         Utente user = (Utente) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect("/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
@@ -41,14 +42,14 @@ public class UserProfileServlet extends HttpServlet {
         Utente user = (Utente) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect("/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        String nome = request.getParameter("nome");
-        String cognome = request.getParameter("cognome");
-        String indirizzo = request.getParameter("indirizzo");
-        String telefono = request.getParameter("telefono");
+        String nome = InputSanitizer.sanitize(request.getParameter("nome"));
+        String cognome = InputSanitizer.sanitize(request.getParameter("cognome"));
+        String indirizzo = InputSanitizer.sanitize(request.getParameter("indirizzo"));
+        String telefono = InputSanitizer.sanitize(request.getParameter("telefono"));
 
         user.setNome(nome);
         user.setCognome(cognome);
@@ -57,7 +58,6 @@ public class UserProfileServlet extends HttpServlet {
 
         userDAO.updateUser(user);
         session.setAttribute("user", user);
-        response.sendRedirect(request.getContextPath() + "/profile.jsp");
+        response.sendRedirect(request.getContextPath() + "/profile");
     }
 }
-

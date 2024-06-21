@@ -5,6 +5,7 @@ import model.EventDAO;
 import model.Ticket;
 import model.TicketDAO;
 import model.TipoEvento;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -17,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Date;
-import java.util.List;
+import java.sql.SQLException;
 
 @WebServlet("/admin/updateEvent")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -45,18 +46,22 @@ public class UpdateEventServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        String nome = request.getParameter("nome");
-        String luogo = request.getParameter("luogo");
+        String nome = InputSanitizer.sanitize(request.getParameter("nome"));
+        String luogo = InputSanitizer.sanitize(request.getParameter("luogo"));
         Date dataEvento = Date.valueOf(request.getParameter("dataEvento"));
-        String orario = request.getParameter("orario");
-        String tipo = request.getParameter("tipo");
-        String fileName;
-        
-        if (request.getPart("image") != null) {
-        fileName = uploadImage(request);
+        String orario = InputSanitizer.sanitize(request.getParameter("orario"));
+        String tipo = InputSanitizer.sanitize(request.getParameter("tipo"));
+
+        String fileName = uploadImage(request);
+        if (fileName == null) {
+            try {
+                fileName = eventDAO.getImage(id);
+                System.out.println("Retrieved image file name: " + fileName); // Debug
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        else fileName = null;
-        
+
         Event updatedEvent = new Event();
         updatedEvent.setCodiceEvento(id);
         updatedEvent.setNome(nome);
@@ -64,19 +69,18 @@ public class UpdateEventServlet extends HttpServlet {
         updatedEvent.setDataEvento(dataEvento);
         updatedEvent.setOrario(orario);
         updatedEvent.setTipo(TipoEvento.fromString(tipo));
-        if (fileName != null) {
-            updatedEvent.setImage(fileName);
-        }
-        else {
-        	updatedEvent.setImage(eventDAO.getEventById(id).getImage());
+        updatedEvent.setImage(fileName);
+
+        try {
+            eventDAO.updateEvent(updatedEvent);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        eventDAO.updateEvent(updatedEvent);
-        
         double prezzoStandard = Double.parseDouble(request.getParameter("prezzoStandard"));
         double prezzoVIP = Double.parseDouble(request.getParameter("prezzoVIP"));
-        
-        double prezzi[] = {prezzoStandard,prezzoVIP};
+
+        double prezzi[] = {prezzoStandard, prezzoVIP};
         String[] tipiBiglietto = {"Standard", "VIP"};
 
         for (int i = 0; i < tipiBiglietto.length; i++) {
@@ -85,7 +89,7 @@ public class UpdateEventServlet extends HttpServlet {
             ticket.setTipo(tipiBiglietto[i]);
             ticket.setDescrizione("Biglietto " + tipiBiglietto[i] + " per l'evento " + id);
             ticket.setPrezzoUnitario(prezzi[i]);
-            ticketDAO.updateTicketByEventID(ticket, tipiBiglietto[i]);
+            ticketDAO.updateTicket(ticket);
         }
 
         response.sendRedirect("../manageEvents");
@@ -101,10 +105,10 @@ public class UpdateEventServlet extends HttpServlet {
                 uploadDirFile.mkdirs();
             }
             filePart.write(uploadDir + File.separator + fileName);
-            System.out.println("Ho caricato");
             return fileName;
         }
         return null;
     }
 }
+
 

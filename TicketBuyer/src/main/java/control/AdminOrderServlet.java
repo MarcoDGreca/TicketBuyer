@@ -3,6 +3,7 @@ package control;
 import model.Order;
 import model.OrderDAO;
 import model.Stato;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -68,21 +69,23 @@ public class AdminOrderServlet extends HttpServlet {
     }
 
     private void filterOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String emailCliente = request.getParameter("emailCliente");
-        String dataInizioStr = request.getParameter("dataInizio");
-        String dataFineStr = request.getParameter("dataFine");
+        String emailCliente = InputSanitizer.sanitize(request.getParameter("emailCliente"));
+        String dataInizioStr = InputSanitizer.sanitize(request.getParameter("dataInizio"));
+        String dataFineStr = InputSanitizer.sanitize(request.getParameter("dataFine"));
 
         Date dataInizio = dataInizioStr != null && !dataInizioStr.isEmpty() ? Date.valueOf(dataInizioStr) : null;
         Date dataFine = dataFineStr != null && !dataFineStr.isEmpty() ? Date.valueOf(dataFineStr) : null;
 
         List<Order> orders = orderDAO.filterOrders(emailCliente, dataInizio, dataFine);
+        System.out.println(dataInizio);
+        System.out.println(dataFine);
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("/admin/manageOrders.jsp").forward(request, response);
     }
 
     private void updateOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
-        String stato = request.getParameter("stato");
+        String stato = InputSanitizer.sanitize(request.getParameter("stato"));
 
         Order order = orderDAO.getOrderById(orderId);
         if (order != null) {

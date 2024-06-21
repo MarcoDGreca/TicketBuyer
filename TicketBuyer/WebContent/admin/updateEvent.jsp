@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="model.Event" %>
+<%@ page import="model.Event, model.Ticket, model.TicketDAO" %>
 <%
     Event event = (Event) request.getAttribute("event");
+    TicketDAO ticketDAO = new TicketDAO();
+    Ticket standardTicket = ticketDAO.getTicketByEventAndType(event.getCodiceEvento(), "Standard");
+    Ticket vipTicket = ticketDAO.getTicketByEventAndType(event.getCodiceEvento(), "VIP");
 %>
 <!DOCTYPE html>
 <html>
@@ -43,16 +46,16 @@
                 </select>
             </div>
             <div>
-                <label for="Prezzo Standard">Prezzo Standard</label>
-                <input type="number" id="prezzoStandard" name="prezzoStandard" required>
+                <label for="prezzoStandard">Prezzo Standard</label>
+                <input type="number" id="prezzoStandard" name="prezzoStandard" value="<%= standardTicket != null ? standardTicket.getPrezzoUnitario() : "" %>" required>
             </div>
             <div>
-                <label for="Prezzo VIP">Prezzo VIP</label>
-                <input type="number" id="prezzoVIP" name="prezzoVIP" required>
+                <label for="prezzoVIP">Prezzo VIP</label>
+                <input type="number" id="prezzoVIP" name="prezzoVIP" value="<%= vipTicket != null ? vipTicket.getPrezzoUnitario() : "" %>" required>
             </div>
             <div>
                 <label for="image">Immagine</label>
-                <input type="file" id="image" name="image" accept="image/*"">
+                <input type="file" id="image" name="image" accept="image/*">
             </div>
             <button type="submit" class="button">Modifica</button>
         </form>

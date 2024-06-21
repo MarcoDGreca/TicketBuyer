@@ -2,12 +2,12 @@
 
 <!DOCTYPE html>
 <html>
-head>
+<head>
     <meta charset="UTF-8">
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
-    <script src="${pageContext.request.contextPath}/scripts/validation.js" defer></script>
+    <script src="${pageContext.request.contextPath}/scripts/loginValidation.js" defer></script>
 </head>
 <body>
     <div id="page">

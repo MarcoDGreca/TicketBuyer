@@ -26,20 +26,22 @@ public class RegisterServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
-        String nome = request.getParameter("name");
+        String nome = request.getParameter("nome");
         String password = request.getParameter("password");
-        String cognome = request.getParameter("surname");
-        String via = request.getParameter("address");
-        String numero = request.getParameter("number");
-        String provincia = request.getParameter("province");
-        String citta = request.getParameter("city");
-        String telefono = request.getParameter("phone");
-        String numeroT = request.getParameter("cell");
+        String cognome = request.getParameter("cognome");
+        String via = request.getParameter("via");
+        String cap = request.getParameter("cap");
+        String numero = request.getParameter("numero");
+        String provincia = request.getParameter("provincia");
+        String citta = request.getParameter("citta");
+        String telefono = request.getParameter("telefono");
+        String numeroT = request.getParameter("numeroT");
         
-        String hashedPassword = hashPassword(password);
-        String indirizzo = via + ", " + numero + ", " + citta + ", " + provincia;
+        String indirizzo = via + ", " + numero + ", " + cap + ", " + citta + ", " + provincia;
 
-        Utente newUser = new Utente( email, hashedPassword, nome, cognome, indirizzo, telefono, numeroT, Ruolo.UTENTE);
+        String hashedPassword = hashPassword(password);
+
+        Utente newUser = new Utente(email, hashedPassword, nome, cognome, indirizzo, telefono, numeroT, Ruolo.UTENTE);
 
         userDAO.addUser(newUser);
 
@@ -60,4 +62,3 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 }
-

@@ -3,6 +3,7 @@ package control;
 import model.Review;
 import model.ReviewDAO;
 import model.Utente;
+import util.InputSanitizer;
 import model.Event;
 import model.OrderDAO;
 
@@ -55,7 +56,7 @@ public class AddReviewServlet extends HttpServlet {
 
         int eventId = Integer.parseInt(request.getParameter("eventId"));
         int rating = Integer.parseInt(request.getParameter("rating"));
-        String comment = request.getParameter("comment");
+        String comment = InputSanitizer.sanitize(request.getParameter("comment"));
 
         Review review = new Review();
         review.setCodiceEvento(eventId);

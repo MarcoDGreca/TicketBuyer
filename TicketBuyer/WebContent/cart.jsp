@@ -31,7 +31,7 @@
                         Ticket ticket = item.getTicket();
                 %>
                 <tr>
-                    <td><img src="img/<%=item.getCodiceEventoBiglietto()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
+                    <td><img src="img/<%=item.getImageItem()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
                     <td><%=ticket.getDescrizione()%></td>
                     <td> 
                         <form action="cart" method="get">

@@ -138,19 +138,41 @@ public class TicketDAO {
         }
     }
     
-    public void updateTicketByEventID(Ticket ticket, String tipoBiglietto) {
-        String sql = "UPDATE Biglietto SET tipo = ?, descrizione = ?, prezzoUnitario = ? WHERE codiceEvento = ? AND tipo = ?";
+    public Ticket getTicketByEventAndType(int eventId, String type) {
+        Ticket ticket = null;
+        String sql = "SELECT * FROM Biglietto WHERE codiceEvento = ? AND tipo = ? AND deleted = false";
 
         try (Connection conn = DataSource.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, ticket.getTipo());
-            ps.setString(2, ticket.getDescrizione());
-            ps.setDouble(3, ticket.getPrezzoUnitario());
-            ps.setInt(4, ticket.getCodiceEvento());
-            ps.setString(5, ticket.getTipo());
+        	ps.setInt(1, eventId);
+        	ps.setString(2, type);
 
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ticket = new Ticket();
+                ticket.setCodiceBiglietto(rs.getInt("codiceBiglietto"));
+                ticket.setCodiceEvento(rs.getInt("codiceEvento"));
+                ticket.setTipo(rs.getString("tipo"));
+                ticket.setDescrizione(rs.getString("descrizione"));
+                ticket.setPrezzoUnitario(rs.getDouble("prezzoUnitario"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ticket;
+    }
+
+    public void updateTicket(Ticket ticket) {
+        String sql = "UPDATE Biglietto SET prezzoUnitario = ? WHERE codiceBiglietto = ?";
+
+        try (Connection conn = DataSource.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        	ps.setDouble(1, ticket.getPrezzoUnitario());
+        	ps.setInt(2, ticket.getCodiceBiglietto());
+        	ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

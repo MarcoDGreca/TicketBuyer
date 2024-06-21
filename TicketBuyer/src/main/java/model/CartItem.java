@@ -1,8 +1,11 @@
 package model;
 
+import java.sql.SQLException;
+
 public class CartItem {
     private Ticket ticket;
     private int quantity;
+    private EventDAO eventDAO = new EventDAO();
 
     public CartItem(Ticket ticket, int quantity) {
         this.ticket = ticket;
@@ -31,6 +34,10 @@ public class CartItem {
     
     public int getCodiceEventoBiglietto() {
         return ticket.getCodiceEvento();
+    }
+    
+    public String getImageItem() throws SQLException {
+		return eventDAO.getImage(ticket.getCodiceEvento());
     }
 }
 

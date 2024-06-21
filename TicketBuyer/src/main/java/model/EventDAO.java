@@ -23,7 +23,7 @@ public class EventDAO {
             ps.setDate(4, new java.sql.Date(event.getDataEvento().getTime()));
             ps.setString(5, event.getOrario());
             ps.setString(6, event.getTipo());
-            ps.setString(8, event.getImage());
+            ps.setString(7, event.getImage());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,20 +31,18 @@ public class EventDAO {
         return event.getCodiceEvento();	
     }
 
-    public void updateEvent(Event event) {
-        String sql = "UPDATE Evento SET nome = ?, luogo = ?, dataEvento = ?, orario = ?, tipo = ?, image = ? WHERE codiceEvento = ?";
-        try (Connection conn = DataSource.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    public void updateEvent(Event event) throws SQLException {
+        String query = "UPDATE Evento SET nome = ?, luogo = ?, dataEvento = ?, orario = ?, tipo = ?, image = ? WHERE codiceEvento = ?";
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, event.getNome());
             ps.setString(2, event.getLuogo());
             ps.setDate(3, new java.sql.Date(event.getDataEvento().getTime()));
             ps.setString(4, event.getOrario());
-            ps.setString(5, event.getTipo());
-            ps.setString(7, event.getImage());
-            ps.setInt(8, event.getCodiceEvento());
+            ps.setString(5, event.getTipo().toString());
+            ps.setString(6, event.getImage());
+            ps.setInt(7, event.getCodiceEvento());
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -140,10 +138,17 @@ public class EventDAO {
             ps.setInt(1, eventId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getString("image");
+                    String image = rs.getString("image");
+                    System.out.println("Image retrieved: " + image); // Debug
+                    return image;
                 }
             }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving image for event ID " + eventId);
+            e.printStackTrace();
+            throw e;
         }
+        System.out.println("No image found for event ID " + eventId);
         return null;
     }
     

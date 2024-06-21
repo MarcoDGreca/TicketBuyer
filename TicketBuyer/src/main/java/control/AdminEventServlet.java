@@ -2,6 +2,7 @@ package control;
 
 import model.Event;
 import model.EventDAO;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,7 +31,7 @@ public class AdminEventServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
+        String action = InputSanitizer.sanitize(request.getParameter("action"));
         if (action != null && action.equals("delete")) {
             int id = Integer.parseInt(request.getParameter("eventID"));
             eventDAO.deleteEvent(id);

@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import model.Event;
 import model.EventDAO;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,12 +31,12 @@ public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nome = request.getParameter("nome");
-        String tipo = request.getParameter("tipo");
-        String dataInizioStr = request.getParameter("dataInizio");
-        String dataFineStr = request.getParameter("dataFine");
-        String disponibilitaStr = request.getParameter("disponibilita");
-        String prezzoMaxStr = request.getParameter("prezzoMax");
+        String nome = InputSanitizer.sanitize(request.getParameter("nome"));
+        String tipo = InputSanitizer.sanitize(request.getParameter("tipo"));
+        String dataInizioStr = InputSanitizer.sanitize(request.getParameter("dataInizio"));
+        String dataFineStr = InputSanitizer.sanitize(request.getParameter("dataFine"));
+        String disponibilitaStr = InputSanitizer.sanitize(request.getParameter("disponibilita"));
+        String prezzoMaxStr = InputSanitizer.sanitize(request.getParameter("prezzoMax"));
 
         Date dataInizio = (dataInizioStr != null && !dataInizioStr.isEmpty()) ? Date.valueOf(dataInizioStr) : null;
         Date dataFine = (dataFineStr != null && !dataFineStr.isEmpty()) ? Date.valueOf(dataFineStr) : null;

@@ -5,6 +5,7 @@ import model.EventDAO;
 import model.Ticket;
 import model.TicketDAO;
 import model.TipoEvento;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -41,11 +42,11 @@ public class AddEventServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nome = request.getParameter("nome");
-        String luogo = request.getParameter("luogo");
+        String nome = InputSanitizer.sanitize(request.getParameter("nome"));
+        String luogo = InputSanitizer.sanitize(request.getParameter("luogo"));
         Date dataEvento = Date.valueOf(request.getParameter("dataEvento"));
-        String orario = request.getParameter("orario");
-        String tipo = request.getParameter("tipo");
+        String orario = InputSanitizer.sanitize(request.getParameter("orario"));
+        String tipo = InputSanitizer.sanitize(request.getParameter("tipo"));
 
         String fileName = uploadImage(request);
 
@@ -66,6 +67,7 @@ public class AddEventServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
         String[] tipiBiglietto = {"Standard", "VIP"};
         double prezzoStandard = Double.parseDouble(request.getParameter("prezzoStandard"));
         double prezzoVIP = Double.parseDouble(request.getParameter("prezzoVIP"));
@@ -87,17 +89,30 @@ public class AddEventServlet extends HttpServlet {
     private String uploadImage(HttpServletRequest request) throws IOException, ServletException {
         Part filePart = request.getPart("image");
         if (filePart != null && filePart.getSize() > 0) {
+           
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            
+     
+            String contentType = filePart.getContentType();
+            if (!contentType.startsWith("image/")) {
+                throw new ServletException("Il file caricato non è un'immagine.");
+            }
+
+
             String uploadDir = getServletContext().getRealPath("") + File.separator + "img";
             File uploadDirFile = new File(uploadDir);
+
             if (!uploadDirFile.exists()) {
                 uploadDirFile.mkdirs();
             }
-            
-            System.out.println("Ho caricato");
+
             filePart.write(uploadDir + File.separator + fileName);
+
+            System.out.println("Immagine caricata con successo: " + fileName);
+
             return fileName;
         }
         return null;
     }
+
 }

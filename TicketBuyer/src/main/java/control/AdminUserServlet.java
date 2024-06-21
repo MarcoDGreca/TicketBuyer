@@ -2,6 +2,7 @@ package control;
 
 import model.Utente;
 import model.UtenteDAO;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,8 +31,8 @@ public class AdminUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String action = request.getParameter("action");
+        String email = InputSanitizer.sanitize(request.getParameter("email"));
+        String action = InputSanitizer.sanitize(request.getParameter("action"));
         if ("delete".equals(action)) {
         	userDAO.deleteUser(email);
         } else if ("promote".equals(action)) {

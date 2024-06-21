@@ -189,24 +189,42 @@ public class OrderDAO {
     
     public List<Order> filterOrders(String emailCliente, Date dataInizio, Date dataFine) {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT * FROM Ordine WHERE (emailCliente = ? OR ? IS NULL) AND (dataAcquisto >= ? OR ? IS NULL) AND (dataAcquisto <= ? OR ? IS NULL)";
+        StringBuilder sql = new StringBuilder("SELECT * FROM Ordine WHERE 1=1");
+        
+        if (emailCliente != null && !emailCliente.isEmpty()) {
+            sql.append(" AND emailCliente = ?");
+        }
+        if (dataInizio != null) {
+            sql.append(" AND dataAcquisto >= ?");
+        }
+        if (dataFine != null) {
+            sql.append(" AND dataAcquisto <= ?");
+        }
+        
         try (Connection conn = DataSource.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, emailCliente);
-            ps.setString(2, emailCliente);
-            ps.setDate(3, dataInizio);
-            ps.setDate(4, dataInizio);
-            ps.setDate(5, dataFine);
-            ps.setDate(6, dataFine);
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            
+            int paramIndex = 1;
+            
+            if (emailCliente != null && !emailCliente.isEmpty()) {
+                ps.setString(paramIndex++, emailCliente);
+            }
+            if (dataInizio != null) {
+                ps.setDate(paramIndex++, dataInizio);
+            }
+            if (dataFine != null) {
+                ps.setDate(paramIndex++, dataFine);
+            }
+            
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                	 Order order = new Order();
-                     order.setCodiceOrdine(rs.getInt("codiceOrdine"));
-                     order.setEmailCliente(rs.getString("emailCliente"));
-                     order.setPrezzoTotale(rs.getDouble("prezzoTotale"));
-                     order.setDataAcquisto(rs.getDate("dataAcquisto"));
-                     order.setStato(Stato.fromString(rs.getString("stato")));
-                     orders.add(order);
+                    Order order = new Order();
+                    order.setCodiceOrdine(rs.getInt("codiceOrdine"));
+                    order.setEmailCliente(rs.getString("emailCliente"));
+                    order.setPrezzoTotale(rs.getDouble("prezzoTotale"));
+                    order.setDataAcquisto(rs.getDate("dataAcquisto"));
+                    order.setStato(Stato.fromString(rs.getString("stato")));
+                    orders.add(order);
                 }
             }
         } catch (SQLException e) {
