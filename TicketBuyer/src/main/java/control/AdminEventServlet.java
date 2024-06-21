@@ -2,6 +2,8 @@ package control;
 
 import model.Event;
 import model.EventDAO;
+import model.Ticket;
+import model.TicketDAO;
 import util.InputSanitizer;
 
 import javax.servlet.ServletException;
@@ -16,6 +18,8 @@ import java.util.List;
 public class AdminEventServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private EventDAO eventDAO;
+    private TicketDAO ticketDAO;
+    private Ticket ticket;
 
     @Override
     public void init() throws ServletException {
@@ -34,6 +38,10 @@ public class AdminEventServlet extends HttpServlet {
         String action = InputSanitizer.sanitize(request.getParameter("action"));
         if (action != null && action.equals("delete")) {
             int id = Integer.parseInt(request.getParameter("eventID"));
+            List<Ticket> tickets = ticketDAO.getTicketsByEventId(id);
+            for(Ticket ticket : tickets) {
+            	ticketDAO.deleteTicket(ticket.getCodiceBiglietto());
+            }
             eventDAO.deleteEvent(id);
         }
         response.sendRedirect("manageEvents");

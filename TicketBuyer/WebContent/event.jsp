@@ -32,7 +32,7 @@
                        <input type="hidden" name="action" value="add">
                        <input type="hidden" name="ticketId" value="<%= ticket.getCodiceBiglietto() %>">
                        <input type="hidden" name="qnt" value="1">
-                       <button type="submit" class="button">Aggiungi al Carrello (Tipo: <%= ticket.getTipo() %> Prezzo: <%= ticket.getPrezzoUnitario() %>)</button>
+                       <button type="submit">Aggiungi al Carrello (Tipo: <%= ticket.getTipo() %> Prezzo: <%= ticket.getPrezzoUnitario() %>)</button>
                     </form>
                 </div>
             <% } %>

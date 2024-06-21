@@ -73,5 +73,54 @@ public class OrderDetailDAO {
             e.printStackTrace();
         }
     }
+    
+    public List<OrderDetail> getAllOrderDetails() {
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        String sql = "SELECT * FROM DettaglioOrdine";
+
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setCodiceOrdine(rs.getInt("codiceOrdine"));
+                orderDetail.setCodiceBiglietto(rs.getInt("codiceBiglietto"));
+                orderDetail.setQuantita(rs.getInt("quantita"));
+                orderDetails.add(orderDetail);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orderDetails;
+    }
+    
+    public List<OrderDetail> getOrderDetailsByUser(String emailCliente) {
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        String sql = "SELECT do.* FROM DettaglioOrdine do " +
+                     "JOIN Ordine o ON do.codiceOrdine = o.codiceOrdine " +
+                     "WHERE o.emailCliente = ?";
+
+        try (Connection conn = DataSource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, emailCliente);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setCodiceOrdine(rs.getInt("codiceOrdine"));
+                    orderDetail.setCodiceBiglietto(rs.getInt("codiceBiglietto"));
+                    orderDetail.setQuantita(rs.getInt("quantita"));
+                    orderDetails.add(orderDetail);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orderDetails;
+    }
 }
 

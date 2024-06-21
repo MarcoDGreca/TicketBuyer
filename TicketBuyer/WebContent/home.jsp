@@ -25,10 +25,6 @@
             <h1>Benvenuto</h1>
             <% if (user != null) { %>
                 <p>Ciao, <%= user.getNome() %> <%= user.getCognome() %>! Bentornato!</p>
-                <div class="welcome-buttons">
-                    <a href="${pageContext.request.contextPath}/profile.jsp" class="button">Profilo</a>
-                    <a href="${pageContext.request.contextPath}/orderDetails" class="button">Ordini</a>
-                </div>
             <% } else { %>
                 <p>Benvenuto nel nostro sito. Effettua il <a href="${pageContext.request.contextPath}/login.jsp">login</a> o <a href="${pageContext.request.contextPath}/register.jsp">registrati</a>.</p>
             <% } %>
