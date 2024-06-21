@@ -40,7 +40,7 @@
                 </div>
                 <div>
                     <label for="cognome">Cognome:</label>
-                    <input type="text" id="cognome" name="cognome" value="Della Greca" required>
+                    <input type="text" id="cognome" name="cognome" required>
                     <span class="error" id="errCognome"></span>
                 </div>
                 <div>

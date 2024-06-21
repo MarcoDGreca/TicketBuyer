@@ -20,7 +20,6 @@
             <h2>Il tuo Carrello</h2>
             <table class="cart-table">
                 <tr>
-                    <th>Immagine</th>
                     <th>Descrizione</th>
                     <th>Quantit&agrave;</th>
                     <th>Prezzo totale</th>
@@ -31,7 +30,6 @@
                         Ticket ticket = item.getTicket();
                 %>
                 <tr>
-                    <td><img src="img/<%=item.getImageItem()%>.jpeg" alt="<%=ticket.getDescrizione()%>"></td>
                     <td><%=ticket.getDescrizione()%></td>
                     <td> 
                         <form action="cart" method="get">

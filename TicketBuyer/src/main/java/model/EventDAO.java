@@ -47,7 +47,7 @@ public class EventDAO {
     }
 
     public synchronized Event getEventById(int eventId) {
-        String query = "SELECT * FROM Evento WHERE codiceEvento = ? AND deleted = 'false'";
+        String query = "SELECT * FROM Evento WHERE codiceEvento = ? AND deleted = false";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, eventId);
@@ -70,7 +70,7 @@ public class EventDAO {
     }
     
     public synchronized List<Event> getEventByLocation(String eventLoc) {
-        String query = "SELECT * FROM Evento WHERE dataEvento = ? AND deleted = 'false'";
+        String query = "SELECT * FROM Evento WHERE dataEvento = ? AND deleted = false";
         List<Event> list = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -98,7 +98,7 @@ public class EventDAO {
 
     public synchronized List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
-        String query = "SELECT * FROM Evento WHERE deleted = 'false'";
+        String query = "SELECT * FROM Evento WHERE deleted = false";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
@@ -121,7 +121,7 @@ public class EventDAO {
 
   
     public void deleteEvent(int id) {
-        String sql = "UPDATE Evento SET deleted = 'true' WHERE codiceEvento = ? AND deleted = 'false'";
+        String sql = "UPDATE Evento SET deleted = true WHERE codiceEvento = ? AND deleted = false";
         try (Connection conn = DataSource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -132,7 +132,7 @@ public class EventDAO {
     }
     
     public String getImage(int eventId) throws SQLException {
-        String sql = "SELECT image FROM Evento WHERE codiceEvento = ? AND deleted = 'false'";
+        String sql = "SELECT image FROM Evento WHERE codiceEvento = ? AND deleted = false";
         try (Connection conn = DataSource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, eventId);
@@ -168,6 +168,9 @@ public class EventDAO {
         if (dataFine != null) {
             sql.append(" AND e.dataEvento <= ?");
         }
+        if (prezzoMax != null) {
+            sql.append(" AND b.prezzoUnitario <= ?");
+        }
         
         sql.append(" AND e.deleted = false");
         sql.append(" AND b.deleted = false");
@@ -182,10 +185,10 @@ public class EventDAO {
                 ps.setString(paramIndex++, tipo);
             }
             if (dataInizio != null) {
-                ps.setDate(paramIndex++, dataInizio);
+                ps.setDate(paramIndex++, new java.sql.Date(dataInizio.getTime()));
             }
             if (dataFine != null) {
-                ps.setDate(paramIndex++, dataFine);
+                ps.setDate(paramIndex++, new java.sql.Date(dataFine.getTime()));
             }
             if (prezzoMax != null) {
                 ps.setDouble(paramIndex++, prezzoMax);
@@ -210,9 +213,10 @@ public class EventDAO {
     }
 
 
+
 	public int getID(Event newEvent) throws SQLException {
 		String nomeE = newEvent.getNome();
-		String sql = "SELECT codiceEvento FROM Evento WHERE nome = ? AND deleted = 'false'";
+		String sql = "SELECT codiceEvento FROM Evento WHERE nome = ? AND deleted = false";
         try (Connection conn = DataSource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nomeE);

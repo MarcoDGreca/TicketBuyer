@@ -63,7 +63,7 @@
                             <td><%= event.getNome() %></td>
                             <td><%= ticket.getDescrizione() %></td>
                             <td><%= detail.getQuantita() %></td>
-                            <td>€<%= ticket.getPrezzoUnitario() %></td>
+                            <td>€<%= ticket.getPrezzoUnitario() * detail.getQuantita() %></td>
                         </tr>
                         <%
                         }

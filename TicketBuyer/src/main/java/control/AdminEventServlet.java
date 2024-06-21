@@ -24,6 +24,7 @@ public class AdminEventServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         eventDAO = new EventDAO();
+        ticketDAO = new TicketDAO();
     }
 
     @Override
