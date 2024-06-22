@@ -52,8 +52,9 @@ public class OrderDetailsServlet extends HttpServlet {
         for (Order order : orders) {
             List<OrderDetail> orderDetails = orderDetailDAO.getOrderDetailsByOrderId(order.getCodiceOrdine());
             for (OrderDetail detail : orderDetails) {
-                Ticket ticket = ticketDAO.getTicketById(detail.getCodiceBiglietto());
-                Event event = eventDAO.getEventById(ticket.getCodiceEvento());
+            	System.out.println(detail.getCodiceBiglietto());
+                Ticket ticket = ticketDAO.getTicketByIdDeleted(detail.getCodiceBiglietto());
+                Event event = eventDAO.getEventByIdDeleted(ticket.getCodiceEvento());
                 request.setAttribute("orderDetail_" + detail.getCodiceBiglietto(), detail);
                 request.setAttribute("ticket_" + detail.getCodiceBiglietto(), ticket);
                 request.setAttribute("event_" + ticket.getCodiceEvento(), event);

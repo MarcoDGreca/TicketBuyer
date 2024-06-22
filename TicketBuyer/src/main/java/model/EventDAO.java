@@ -69,6 +69,29 @@ public class EventDAO {
         return null;
     }
     
+    public synchronized Event getEventByIdDeleted(int eventId) {
+        String query = "SELECT * FROM Evento WHERE codiceEvento = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, eventId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new Event(
+                        resultSet.getInt("codiceEvento"),
+                        resultSet.getString("nome"),
+                        resultSet.getString("luogo"),
+                        resultSet.getDate("dataEvento"),
+                        resultSet.getString("orario"),
+                        TipoEvento.fromString(resultSet.getString("tipo"))
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public synchronized List<Event> getEventByLocation(String eventLoc) {
         String query = "SELECT * FROM Evento WHERE dataEvento = ? AND deleted = false";
         List<Event> list = new ArrayList<>();

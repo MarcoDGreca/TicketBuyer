@@ -40,6 +40,28 @@ public class TicketDAO {
         return null;
     }
     
+    public Ticket getTicketByIdDeleted(int ticketId) {
+        String query = "SELECT * FROM Biglietto WHERE codiceBiglietto = ? AND (deleted = true OR deleted = false)";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, ticketId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new Ticket(
+                        resultSet.getInt("codiceBiglietto"),
+                        resultSet.getInt("codiceEvento"),
+                        resultSet.getString("tipo"),
+                        resultSet.getString("descrizione"),
+                        resultSet.getDouble("prezzoUnitario")
+                    );
+              }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
         String query = "SELECT * FROM Biglietto";
