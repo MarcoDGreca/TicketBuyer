@@ -56,7 +56,7 @@ public class UpdateEventServlet extends HttpServlet {
         if (fileName == null) {
             try {
                 fileName = eventDAO.getImage(id);
-                System.out.println("Retrieved image file name: " + fileName); // Debug
+                System.out.println("Retrieved image file name: " + fileName);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

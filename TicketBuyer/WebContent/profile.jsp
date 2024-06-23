@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
         <section>
             <h2>Profilo Utente</h2>

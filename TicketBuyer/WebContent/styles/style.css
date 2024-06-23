@@ -106,39 +106,6 @@ main {
     padding: 0 20px;
 }
 
-.hero-section {
-    background-color: #023047;
-    color: #fff;
-    padding: 50px 20px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 40px;
-}
-
-.hero-section h1 {
-    margin-bottom: 20px;
-}
-
-.hero-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.hero-buttons .button {
-    background-color: #FB8500;
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-}
-
-.hero-buttons .button:hover {
-    background-color: #FFB703;
-}
-
 section, aside, .form-container, .profile, .login, .register,
     .order-list, .contact, .table-container, .event-management-container,
     .user-management-container, .order-management-container,

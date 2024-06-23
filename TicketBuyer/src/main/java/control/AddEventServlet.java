@@ -59,7 +59,6 @@ public class AddEventServlet extends HttpServlet {
         newEvent.setImage(fileName);
 
         eventDAO.addEvent(newEvent);
-        System.out.println("Lol.");
         
         int eventID = 0;
 		try {

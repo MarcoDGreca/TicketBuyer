@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const results = document.getElementById("results");
         results.innerHTML = "";
 
-        // Rimuovi duplicati
         const uniqueEvents = [];
         const eventIds = new Set();
         for (const event of events) {

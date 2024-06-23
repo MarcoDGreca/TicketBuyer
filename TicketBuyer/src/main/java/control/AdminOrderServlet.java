@@ -77,8 +77,6 @@ public class AdminOrderServlet extends HttpServlet {
         Date dataFine = dataFineStr != null && !dataFineStr.isEmpty() ? Date.valueOf(dataFineStr) : null;
 
         List<Order> orders = orderDAO.filterOrders(emailCliente, dataInizio, dataFine);
-        System.out.println(dataInizio);
-        System.out.println(dataFine);
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("/admin/manageOrders.jsp").forward(request, response);
     }

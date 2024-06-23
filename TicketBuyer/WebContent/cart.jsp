@@ -56,7 +56,7 @@
 
             <div class="cart-checkout">
                 <a <%if(request.getSession().getAttribute("user") != null) { %>
-                        href="checkout" <%} else { %>href="login.jsp?action=checkout" <%} %>>
+                        href="checkout" <%} else { %>href="login.jsp" <%} %>>
                     <button>Acquista</button>
                 </a>
             </div>

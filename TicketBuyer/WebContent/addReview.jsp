@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
         <section class="review-section">
             <h2>Inserisci una Recensione</h2>

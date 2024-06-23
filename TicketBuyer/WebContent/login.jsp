@@ -10,7 +10,7 @@
     <script src="${pageContext.request.contextPath}/scripts/loginValidation.js" defer></script>
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
         <section>
             <h2>Login</h2>

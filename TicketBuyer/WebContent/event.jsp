@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
         <section class="event-section">
             <h1><%= event.getNome() %></h1>

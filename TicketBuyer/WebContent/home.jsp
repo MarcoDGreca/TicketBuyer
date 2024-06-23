@@ -19,9 +19,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
-        <section class="welcome-section">
+        <section>
             <h1>Benvenuto</h1>
             <% if (user != null) { %>
                 <p>Ciao, <%= user.getNome() %> <%= user.getCognome() %>! Bentornato!</p>

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
         <section class="order-confirmation-section">
             <h2>Ordine Confermato</h2>

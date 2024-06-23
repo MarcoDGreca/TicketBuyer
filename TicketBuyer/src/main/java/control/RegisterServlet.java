@@ -3,6 +3,7 @@ package control;
 import model.Ruolo;
 import model.Utente;
 import model.UtenteDAO;
+import util.InputSanitizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,17 +26,17 @@ public class RegisterServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String nome = request.getParameter("nome");
-        String password = request.getParameter("password");
-        String cognome = request.getParameter("cognome");
-        String via = request.getParameter("via");
-        String cap = request.getParameter("cap");
-        String numero = request.getParameter("numero");
-        String provincia = request.getParameter("provincia");
-        String citta = request.getParameter("citta");
-        String telefono = request.getParameter("telefono");
-        String numeroT = request.getParameter("numeroT");
+        String email = InputSanitizer.sanitize(request.getParameter("email"));
+        String nome = InputSanitizer.sanitize(request.getParameter("nome"));
+        String password = InputSanitizer.sanitize(request.getParameter("password"));
+        String cognome = InputSanitizer.sanitize(request.getParameter("cognome"));
+        String via = InputSanitizer.sanitize(request.getParameter("via"));
+        String cap = InputSanitizer.sanitize(request.getParameter("cap"));
+        String numero = InputSanitizer.sanitize(request.getParameter("numero"));
+        String provincia = InputSanitizer.sanitize(request.getParameter("provincia"));
+        String citta = InputSanitizer.sanitize(request.getParameter("citta"));
+        String telefono = InputSanitizer.sanitize(request.getParameter("telefono"));
+        String numeroT = InputSanitizer.sanitize(request.getParameter("numeroT"));
         
         String indirizzo = via + ", " + numero + ", " + cap + ", " + citta + ", " + provincia;
 

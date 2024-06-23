@@ -35,12 +35,12 @@
                             <td><%= user.getCognome() %></td>
                             <td><%= user.getRuolo() %></td>
                             <td class="user-actions">
-                                <form action="manageUsers" method="post" style="display:inline;">
+                                <form action="manageUsers" method="post">
                                     <input type="hidden" name="email" value="<%= user.getEmail() %>">
                                     <input type="hidden" name="action" value="delete">
                                     <button type="submit" class="user-action-button">Elimina</button>
                                 </form>
-                                <form action="manageUsers" method="post" style="display:inline;">
+                                <form action="manageUsers" method="post">
                                     <input type="hidden" name="email" value="<%= user.getEmail() %>">
                                     <input type="hidden" name="action" value="promote">
                                     <button type="submit" class="user-action-button">Promuovi ad Admin</button>

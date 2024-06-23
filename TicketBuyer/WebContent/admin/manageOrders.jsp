@@ -53,7 +53,7 @@
                             <td>&euro;<%= order.getPrezzoTotale() %></td>
                             <td><%= order.getStato().getStato() %></td>
                             <td class="order-actions">
-                                <form action="manageOrders" method="post" style="display:inline;">
+                                <form action="manageOrders" method="post">
                                     <input type="hidden" name="action" value="update">
                                     <input type="hidden" name="orderId" value="<%= order.getCodiceOrdine() %>">
                                     <select name="stato" required>
@@ -63,7 +63,7 @@
                                     </select>
                                     <button type="submit" class="order-action-button">Aggiorna</button>
                                 </form>
-                                <form action="manageOrders" method="post" style="display:inline;">
+                                <form action="manageOrders" method="post">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="orderId" value="<%= order.getCodiceOrdine() %>">
                                     <button type="submit" class="order-action-button">Elimina</button>

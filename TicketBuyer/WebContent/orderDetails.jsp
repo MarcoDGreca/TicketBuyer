@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
         <%
         if (orders != null && !orders.isEmpty()) {
@@ -38,7 +38,7 @@
                         </tr>
                         <tr>
                             <th>Totale</th>
-                            <td>€<%=order.getPrezzoTotale()%></td>
+                            <td>&euro;<%=order.getPrezzoTotale()%></td>
                         </tr>
                         <tr>
                             <th>Stato</th>
@@ -63,7 +63,7 @@
                             <td><%= event.getNome() %></td>
                             <td><%= ticket.getDescrizione() %></td>
                             <td><%= detail.getQuantita() %></td>
-                            <td>€<%= ticket.getPrezzoUnitario() * detail.getQuantita() %></td>
+                            <td>&euro;<%= ticket.getPrezzoUnitario() * detail.getQuantita() %></td>
                         </tr>
                         <%
                         }

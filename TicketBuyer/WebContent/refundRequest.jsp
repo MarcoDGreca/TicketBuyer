@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/style.css">
 </head>
 <body>
-    <div id="page">
+    <div>
         <jsp:include page="header.jsp" />
         <section class="refund-section">
             <h2>Richiesta di Rimborso</h2>
@@ -30,7 +30,7 @@
                         <tr>
                             <td><%= order.getCodiceOrdine() %></td>
                             <td><%= order.getDataAcquisto() %></td>
-                            <td>€<%= order.getPrezzoTotale() %></td>
+                            <td>&euro;<%= order.getPrezzoTotale() %></td>
                             <td><%= order.getStato().getStato() %></td>
                             <td>
                                 <% if (order.getStato().getStato().equals("Completato")) { %>
